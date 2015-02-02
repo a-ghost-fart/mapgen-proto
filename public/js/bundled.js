@@ -4,12 +4,21 @@ Player.prototype.constructor = Player;
 
 function Player(game, _x, _y) {
     'use strict';
-    Phaser.Sprite.call(this, game, _x, _y, 'test_tileset');
+    Phaser.Sprite.call(this, game, _x, _y, 'test_sprite');
 
     this.jumpSpeed = 350;
     this.movementSpeed = 250;
 
     this.enablePhysics(game);
+
+    this.projectiles = game.add.group();
+    this.projectiles.enableBody = true;
+    this.projectiles.physicsBodyType = Phaser.Physics.ARCADE;
+    this.projectiles.createMultiple(50, 'test_sprite_small');
+    this.projectiles.setAll('checkWorldBounds', true);
+    this.projectiles.setAll('outOfBoundsKill', true);
+    this.fire_cooldown = 0;
+    this.fire_rate = 100;
 }
 
 Player.prototype.enablePhysics = function (game) {
@@ -21,9 +30,25 @@ Player.prototype.enablePhysics = function (game) {
         this.body.collideWorldBounds = true;
 };
 
+Player.prototype.fire = function (game, target) {
+    'use strict';
+    if (game.time.now > this.fire_cooldown && this.projectiles.countDead() > 0) {
+        this.fire_cooldown = game.time.now + this.fire_rate;
+        var projectile = this.projectiles.getFirstDead();
+        projectile.reset(this.x, this.y);
+        projectile.rotation = game.physics.arcade.angleToPointer(projectile);
+        game.physics.arcade.moveToPointer(projectile, 300);
+    }
+};
+
 Player.prototype.handleUpdate = function (game) {
     'use strict';
     this.body.velocity.x = 0;
+
+    if (game.input.activePointer.isDown) {
+        this.fire(game, game.input.mousePointer.position);
+    }
+
     if (game.input.keyboard.isDown(Phaser.Keyboard.A)) {
         this.body.velocity.x = -this.movementSpeed;
     }
@@ -67,6 +92,8 @@ window.onload = function () {
 module.exports = {
     'preload': function () {
         'use strict';
+        this.load.image('test_sprite', 'assets/sprites/test_sprite.png');
+        this.load.image('test_sprite_small', 'assets/sprites/test_sprite_small.png');
         this.load.image('test_tileset', 'assets/tilesets/test_tileset.png');
         this.load.tilemap('test_map', 'assets/maps/test_room_1.json', null, Phaser.Tilemap.TILED_JSON);
     },
@@ -79,10 +106,41 @@ module.exports = {
 },{}],5:[function(require,module,exports){
 var Player = require('../characters/Player');
 
+var testMap = [
+    [0, 1, 1, 1, 1, 0],
+    [0, 1, 1, 0, 0, 0],
+    [0, 1, 1, 1, 1, 0],
+    [0, 0, 1, 0, 1, 0],
+    [0, 0, 1, 0, 0, 0],
+    [0, 0, 1, 1, 1, 0]
+];
+
+var testRoom = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
+];
+
+
+
 module.exports = {
-    'preload': function () {
-    
-    },
 
     'create': function () {
         'use strict';
@@ -90,27 +148,57 @@ module.exports = {
         this.player = new Player(this, 30, 30);
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player, Phaser.Camera.STYLE_TOPDOWN);
+
+        this.dust_emitter = this.game.add.emitter(0, 0, 100);
+        this.dust_emitter.makeParticles('test_sprite_small');
+        this.dust_emitter.gravity = 200;
     },
 
     'initWorld': function () {
         'use strict';
+
+        var _this = this;
         this.world = {};
-        this.world.map = this.game.add.tilemap('test_map');
-        this.world.map.addTilesetImage('test_tileset', 'test_tileset');
-        this.world.layer = this.world.map.createLayer('collision');
-        this.world.map.setCollision(1, true, this.world.layer);
+        this.world.map = this.game.add.tilemap();
+        this.world.map.addTilesetImage('test_tileset');
+        this.world.layer = this.world.map.create('test', testMap[0].length * testRoom[0].length, testMap.length * testRoom[0].length, 32, 32);
         this.world.layer.resizeWorld();
+        this.world.map.setCollision(1, true, this.world.layer);
+
+        for (var y = 0; y < testMap.length; y++) {
+            for (var x = 0; x < testMap[0].length; x++) {
+                if (testMap[y][x] === 1) {
+                    populateRooms(x * testRoom[0].length, y * testRoom[0].length);
+                }
+            }
+        }
+
+        function populateRooms(offsetX, offsetY) {
+            for (var y = 0; y < testRoom.length; y++) {
+                for (var x = 0; x < testRoom[0].length; x++) {
+                    if (testRoom[y][x] === 1) {
+                        _this.world.map.putTile(1, offsetX + x, offsetY + y, 'test');
+                    }
+                }
+            }
+        }
     },
 
     'update': function () {
         'use strict';
+        var _this = this;
         this.game.physics.arcade.collide(this.player, this.world.layer);
+        this.game.physics.arcade.collide(this.player, this.dust_emitter);
         this.player.handleUpdate(this);
+        this.game.physics.arcade.collide(this.dust_emitter, this.world.layer);
+        this.game.physics.arcade.collide(this.player.projectiles, this.world.layer, function (projectile) {
+            _this.dust_emitter.x = projectile.x;
+            _this.dust_emitter.y = projectile.y;
+            _this.dust_emitter.start(true, 2000, null, 10);
+            projectile.kill();
+        });
     },
 
-    'render': function () {
-    
-    }
 };
 
 },{"../characters/Player":1}]},{},[3])
