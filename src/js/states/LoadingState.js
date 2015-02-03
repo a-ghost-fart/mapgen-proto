@@ -27,14 +27,33 @@ module.exports = {
 
 
     /**
-     * Create state, called once the preload phase
-     * has finished, just moves the application onto
-     * the next state, for now, the play state.
+     * Create state, called to create the preloadBar and stuff
+     * like that.
      *
      * @attribute {Function}
      */
     'create': function () {
         'use strict';
-        this.state.start('play');
+
+        this.preloadBar = this.game.add.graphics(0, 50);
+        this.preloadBar.lineStyle(3, 0xffffff, 1);
+        this.preloadBar.moveTo(0, 0);
+        this.preloadBar.lineTo(this.game.width, 0);
+        this.preloadBar.scale.x = 0; // set the bar to the beginning position
+    },
+
+
+    /**
+     * Update state, in this case used to update the progress bar,
+     * then progress to the main play state if complete.
+     *
+     * @attribute {Function}
+     */
+    'update': function () {
+        'use strict';
+        this.preloadBar.scale.x = this.game.load.progress * 0.01;
+        if (this.game.load.progress === 100) {
+            this.state.start('play');
+        }
     }
 };

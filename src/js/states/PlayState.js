@@ -35,6 +35,8 @@ module.exports = {
      * Initialises the world, generates the map and populates
      * room tiles procedurally.
      *
+     * @todo This takes forever, need to offload it to the preload
+     * state or something.
      * @attribute {Function}
      */
     'initWorld': function () {

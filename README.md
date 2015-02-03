@@ -12,6 +12,7 @@
 * [LoadingState](#module_LoadingState)
   * [LoadingState.preload()](#module_LoadingState.preload)
   * [LoadingState.create()](#module_LoadingState.create)
+  * [LoadingState.update()](#module_LoadingState.update)
 * [PlayState](#module_PlayState)
   * [PlayState.create()](#module_PlayState.create)
   * [PlayState.initWorld()](#module_PlayState.initWorld)
@@ -74,6 +75,7 @@ use moving to specific states.
 * [LoadingState](#module_LoadingState)
   * [LoadingState.preload()](#module_LoadingState.preload)
   * [LoadingState.create()](#module_LoadingState.create)
+  * [LoadingState.update()](#module_LoadingState.update)
 
 <a name="module_LoadingState.preload"></a>
 ##LoadingState.preload()
@@ -81,9 +83,13 @@ Preload step for the loading state.
 
 <a name="module_LoadingState.create"></a>
 ##LoadingState.create()
-Create state, called once the preload phase
-has finished, just moves the application onto
-the next state, for now, the play state.
+Create state, called to create the preloadBar and stuff
+like that.
+
+<a name="module_LoadingState.update"></a>
+##LoadingState.update()
+Update state, in this case used to update the progress bar,
+then progress to the main play state if complete.
 
 <a name="module_PlayState"></a>
 #PlayState
