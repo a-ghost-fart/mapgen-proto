@@ -8,7 +8,7 @@
 function RoomFactory(game) {
     'use strict';
     this.rooms = [];
-    this.dimensions = new Phaser.Point(20, 20);
+    this.dimensions = new Phaser.Point(40, 20);
     this.initRooms(game);
 }
 

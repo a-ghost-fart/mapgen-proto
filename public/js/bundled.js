@@ -136,11 +136,11 @@ module.exports = {
     /**
      * @attribute {Number} ROOM_SIZE - Size of a room
      */
-    'ROOM_SIZE': 16 * 20,
+    'ROOM_SIZE': 32 * 40,
     /**
      * @attribute {Number} TILE_SIZE - Size of a single tile
      */
-    'TILE_SIZE': 16
+    'TILE_SIZE': 32
 };
 
 },{}],3:[function(require,module,exports){
@@ -189,7 +189,7 @@ module.exports = MapFactory;
 function RoomFactory(game) {
     'use strict';
     this.rooms = [];
-    this.dimensions = new Phaser.Point(20, 20);
+    this.dimensions = new Phaser.Point(40, 20);
     this.initRooms(game);
 }
 
@@ -309,7 +309,7 @@ module.exports = {
     'create': function () {
         'use strict';
         this.initWorld();
-        this.player = new Player(this, 30, 30);
+        this.player = new Player(this, Config.ROOM_SIZE + 40, 30);
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player, Phaser.Camera.STYLE_TOPDOWN);
 

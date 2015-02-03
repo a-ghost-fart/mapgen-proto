@@ -24,9 +24,9 @@ module.exports = {
     /**
      * @attribute {Number} ROOM_SIZE - Size of a room
      */
-    'ROOM_SIZE': 16 * 20,
+    'ROOM_SIZE': 32 * 40,
     /**
      * @attribute {Number} TILE_SIZE - Size of a single tile
      */
-    'TILE_SIZE': 16
+    'TILE_SIZE': 32
 };

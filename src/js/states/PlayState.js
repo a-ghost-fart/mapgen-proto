@@ -20,7 +20,7 @@ module.exports = {
     'create': function () {
         'use strict';
         this.initWorld();
-        this.player = new Player(this, 30, 30);
+        this.player = new Player(this, Config.ROOM_SIZE + 40, 30);
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player, Phaser.Camera.STYLE_TOPDOWN);
 
