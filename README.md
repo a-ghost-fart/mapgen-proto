@@ -30,8 +30,9 @@
   * [new MapFactory()](#new_MapFactory)
   * [mapFactory.generate()](#MapFactory#generate)
 * [class: RoomFactory](#RoomFactory)
-  * [new RoomFactory()](#new_RoomFactory)
-  * [roomFactory.generate()](#RoomFactory#generate)
+  * [new RoomFactory(game)](#new_RoomFactory)
+  * [roomFactory.initRooms(game)](#RoomFactory#initRooms)
+  * [roomFactory.selectRandom()](#RoomFactory#selectRandom)
  
 <a name="module_Config"></a>
 #Config
@@ -193,16 +194,29 @@ by a two dimensional array;
 **Members**
 
 * [class: RoomFactory](#RoomFactory)
-  * [new RoomFactory()](#new_RoomFactory)
-  * [roomFactory.generate()](#RoomFactory#generate)
+  * [new RoomFactory(game)](#new_RoomFactory)
+  * [roomFactory.initRooms(game)](#RoomFactory#initRooms)
+  * [roomFactory.selectRandom()](#RoomFactory#selectRandom)
 
 <a name="new_RoomFactory"></a>
-##new RoomFactory()
+##new RoomFactory(game)
 Static class representing tools for
 room generation;
 
-<a name="RoomFactory#generate"></a>
-##roomFactory.generate()
+**Params**
+
+- game `Phaser.Game` - The current game  
+
+<a name="RoomFactory#initRooms"></a>
+##roomFactory.initRooms(game)
+Adds Tiled json files to the possible room pool
+
+**Params**
+
+- game `Phaser.Game` - Current game  
+
+<a name="RoomFactory#selectRandom"></a>
+##roomFactory.selectRandom()
 Generates a room layout for the current world represented
 by a two dimensional array;
 

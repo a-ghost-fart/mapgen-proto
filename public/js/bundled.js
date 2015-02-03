@@ -159,7 +159,7 @@ var testMap = [
  *
  * @constructor
  */
-function MapFactory() {}
+function MapFactory(game) {}
 
 
 /**
@@ -168,6 +168,7 @@ function MapFactory() {}
  *
  * @todo At present just outputs the testMap variable because this is still a WIP
  *
+ * @static
  * @return {Array} Two dimensional array representing a map
  */
 MapFactory.prototype.generate = function () {
@@ -175,62 +176,61 @@ MapFactory.prototype.generate = function () {
     return testMap;
 };
 
-module.exports = new MapFactory();
+module.exports = MapFactory;
 
 },{}],4:[function(require,module,exports){
-var testRoom = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
-];
-
 /**
  * Static class representing tools for
  * room generation;
  *
  * @constructor
+ * @param {Phaser.Game} game - The current game
  */
-function RoomFactory() {
-
+function RoomFactory(game) {
+    'use strict';
+    this.rooms = [];
+    this.dimensions = new Phaser.Point(20, 20);
+    this.initRooms(game);
 }
+
+
+/**
+ * Adds Tiled json files to the possible room pool
+ *
+ * @param {Phaser.Game} game - Current game
+ */
+RoomFactory.prototype.initRooms = function (game) {
+    'use strict';
+    this.rooms.push(game.add.tilemap('test_room_1'));
+    this.rooms.push(game.add.tilemap('test_room_2'));
+};
 
 
 /**
  * Generates a room layout for the current world represented
  * by a two dimensional array;
  *
- * @todo At present just outputs the testRoom variable because this is still a WIP
- *
  * @return {Array} Two dimensional array representing a map
  */
-RoomFactory.prototype.generate = function () {
+RoomFactory.prototype.selectRandom = function () {
     'use strict';
-    return testRoom;
+    var rand = Math.floor(Math.random() * this.rooms.length);
+    return this.rooms[rand].layers[0].data;
 };
 
 
-module.exports = new RoomFactory();
+module.exports = RoomFactory;
 
 },{}],5:[function(require,module,exports){
 var Config = require('./conf/Config');
 
+/**
+ * Bootstrap the game. For the purpose of
+ * debugging, the game itself is applied
+ * to the window object, but eventually
+ * this will fall off and just sit within
+ * it's own scope.
+ */
 window.onload = function () {
     'use strict';
     document.title = Config.TITLE + ' v' + Config.VERSION;
@@ -267,7 +267,9 @@ module.exports = {
         this.load.image('test_sprite', 'assets/sprites/test_sprite.png');
         this.load.image('test_sprite_small', 'assets/sprites/test_sprite_small.png');
         this.load.image('test_tileset', 'assets/tilesets/test_tileset.png');
-        this.load.tilemap('test_map', 'assets/maps/test_room_1.json', null, Phaser.Tilemap.TILED_JSON);
+
+        this.load.tilemap('test_room_1', 'assets/maps/test_room_1.json', null, Phaser.Tilemap.TILED_JSON);
+        this.load.tilemap('test_room_2', 'assets/maps/test_room_2.json', null, Phaser.Tilemap.TILED_JSON);
     },
 
 
@@ -311,7 +313,7 @@ module.exports = {
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player, Phaser.Camera.STYLE_TOPDOWN);
 
-
+        // Ideally this needs to go somewhere, not sure where yet.
         this.dust_emitter = this.game.add.emitter(0, 0, 100);
         this.dust_emitter.makeParticles('test_sprite_small');
         this.dust_emitter.gravity = 200;
@@ -327,21 +329,23 @@ module.exports = {
     'initWorld': function () {
         'use strict';
 
-        var testRoom = RoomFactory.generate();
-        var testMap = MapFactory.generate();
+        var roomFactory = new RoomFactory(this.game);
+        var mapFactory = new MapFactory(this.game);
+
+        var map = mapFactory.generate();
 
         var _this = this;
         this.world = {};
         this.world.map = this.game.add.tilemap();
         this.world.map.addTilesetImage('test_tileset');
-        this.world.layer = this.world.map.create('test', testMap[0].length * testRoom[0].length, testMap.length * testRoom[0].length, Config.TILE_SIZE, Config.TILE_SIZE);
+        this.world.layer = this.world.map.create('test', map[0].length * roomFactory.dimensions.x, map.length * roomFactory.dimensions.y, Config.TILE_SIZE, Config.TILE_SIZE);
         this.world.layer.resizeWorld();
         this.world.map.setCollision(1, true, this.world.layer);
 
-        for (var y = 0; y < testMap.length; y++) {
-            for (var x = 0; x < testMap[0].length; x++) {
-                if (testMap[y][x] === 1) {
-                    populateRooms(x * testRoom[0].length, y * testRoom[0].length);
+        for (var y = 0; y < map.length; y++) {
+            for (var x = 0; x < map[0].length; x++) {
+                if (map[y][x] === 1) {
+                    populateRooms(x * roomFactory.dimensions.x, y * roomFactory.dimensions.y);
                 }
             }
         }
@@ -355,10 +359,11 @@ module.exports = {
          * @param {Number} offsetY - Current room offset y
          */
         function populateRooms(offsetX, offsetY) {
-            for (var y = 0; y < testRoom.length; y++) {
-                for (var x = 0; x < testRoom[0].length; x++) {
-                    if (testRoom[y][x] === 1) {
-                        _this.world.map.putTile(1, offsetX + x, offsetY + y, 'test');
+            var room = roomFactory.selectRandom();
+            for (var y = 0; y < roomFactory.dimensions.y; y++) {
+                for (var x = 0; x < roomFactory.dimensions.x; x++) {
+                    if (room[y][x].index !== -1) {
+                        _this.world.map.putTile(room[y][x].index, offsetX + x, offsetY + y, 'test');
                     }
                 }
             }

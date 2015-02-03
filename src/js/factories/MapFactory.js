@@ -13,7 +13,7 @@ var testMap = [
  *
  * @constructor
  */
-function MapFactory() {}
+function MapFactory(game) {}
 
 
 /**
@@ -22,6 +22,7 @@ function MapFactory() {}
  *
  * @todo At present just outputs the testMap variable because this is still a WIP
  *
+ * @static
  * @return {Array} Two dimensional array representing a map
  */
 MapFactory.prototype.generate = function () {
@@ -29,4 +30,4 @@ MapFactory.prototype.generate = function () {
     return testMap;
 };
 
-module.exports = new MapFactory();
+module.exports = MapFactory;
