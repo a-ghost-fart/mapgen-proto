@@ -2,25 +2,56 @@
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
+/**
+ * Represents the player. Whilst not a singleton,
+ * should be treated as such anyway because of reasons.
+ *
+ * @constructor
+ * @extends {Phaser.Sprite}
+ * @param {Phaser.Game} game - The current game
+ * @param {float} _x - The x coordinate to spawn player
+ * @param {float} _y - The y coordinate to spawn player
+ */
 function Player(game, _x, _y) {
     'use strict';
     Phaser.Sprite.call(this, game, _x, _y, 'test_sprite');
 
     this.jumpSpeed = 350;
     this.movementSpeed = 250;
+    this.fire_cooldown = 0;
+    this.fire_rate = 400;
+    this.projectiles = game.add.group();
 
     this.enablePhysics(game);
+    this.initProjectiles();
+}
 
-    this.projectiles = game.add.group();
+
+/**
+ * Sets up the physics and spawns 50 spare projectiles
+ * that can be killed, cached, and used for firing as
+ * opposed to creating each one on the fly.
+ *
+ * @method
+ */
+Player.prototype.initProjectiles = function () {
+    'use strict';
     this.projectiles.enableBody = true;
     this.projectiles.physicsBodyType = Phaser.Physics.ARCADE;
     this.projectiles.createMultiple(50, 'test_sprite_small');
     this.projectiles.setAll('checkWorldBounds', true);
     this.projectiles.setAll('outOfBoundsKill', true);
-    this.fire_cooldown = 0;
-    this.fire_rate = 100;
-}
+};
 
+
+/**
+ * Sets up the player sprite to use
+ * arcade physics and configures gravity,
+ * bounce, and the like.
+ *
+ * @method
+ * @param {Phaser.Game} game - The current game
+ */
 Player.prototype.enablePhysics = function (game) {
     'use strict';
         game.physics.arcade.enable(this);
@@ -30,7 +61,14 @@ Player.prototype.enablePhysics = function (game) {
         this.body.collideWorldBounds = true;
 };
 
-Player.prototype.fire = function (game, target) {
+
+/**
+ * Fires a projectile at the mouse pointer
+ *
+ * @method
+ * @param {Phaser.Game} game - The current game
+ */
+Player.prototype.fire = function (game) {
     'use strict';
     if (game.time.now > this.fire_cooldown && this.projectiles.countDead() > 0) {
         this.fire_cooldown = game.time.now + this.fire_rate;
@@ -41,12 +79,20 @@ Player.prototype.fire = function (game, target) {
     }
 };
 
+
+/**
+ * Player's update method as update() is taken by
+ * the parent class, Phaser.Sprite.
+ *
+ * @method
+ * @param {Phaser.Game} game - The current game
+ */
 Player.prototype.handleUpdate = function (game) {
     'use strict';
     this.body.velocity.x = 0;
 
     if (game.input.activePointer.isDown) {
-        this.fire(game, game.input.mousePointer.position);
+        this.fire(game);
     }
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.A)) {
@@ -60,15 +106,40 @@ Player.prototype.handleUpdate = function (game) {
     }
 };
 
+
 module.exports = Player;
 
 },{}],2:[function(require,module,exports){
+/**
+ * Configuration object, used for constants
+ * across the application
+ *
+ * @module Config
+ */
 module.exports = {
+    /**
+     * @attribute {Number} WIDTH - Width of the canvas
+     */
     'WIDTH': 800,
+    /**
+     * @attribute {Number} HEIGHT - Height of the canvas
+     */
     'HEIGHT': 600,
+    /**
+     * @attribute {String} TITLE - Window title
+     */
     'TITLE': 'Something',
+    /**
+     * @attribute {String} VERSION - Application version
+     */
     'VERSION': '0.0.0',
+    /**
+     * @attribute {Number} ROOM_SIZE - Size of a room
+     */
     'ROOM_SIZE': 16 * 20,
+    /**
+     * @attribute {Number} TILE_SIZE - Size of a single tile
+     */
     'TILE_SIZE': 16
 };
 
@@ -89,7 +160,23 @@ window.onload = function () {
 };
 
 },{"./conf/Config":2,"./states/LoadingState":4,"./states/PlayState":5}],4:[function(require,module,exports){
+/**
+ * state to handle preloading of assets for use
+ * throughout the rest of the game. at present
+ * just handles everything upfront, but could
+ * use moving to specific states.
+ * 
+ * @module LoadingState
+ * @extends Phaser.State
+ */
 module.exports = {
+
+
+    /**
+     * Preload step for the loading state.
+     *
+     * @attribute {Function}
+     */
     'preload': function () {
         'use strict';
         this.load.image('test_sprite', 'assets/sprites/test_sprite.png');
@@ -97,6 +184,15 @@ module.exports = {
         this.load.image('test_tileset', 'assets/tilesets/test_tileset.png');
         this.load.tilemap('test_map', 'assets/maps/test_room_1.json', null, Phaser.Tilemap.TILED_JSON);
     },
+
+
+    /**
+     * Create state, called once the preload phase
+     * has finished, just moves the application onto
+     * the next state, for now, the play state.
+     *
+     * @attribute {Function}
+     */
     'create': function () {
         'use strict';
         this.state.start('play');
@@ -140,8 +236,20 @@ var testRoom = [
 
 
 
+/**
+ * Main game loop state
+ * 
+ * @module PlayState
+ * @extends Phaser.State
+ */
 module.exports = {
 
+    /**
+     * Called when creating the play state after preloading
+     * of assets is already handled.
+     *
+     * @attribute {Function}
+     */
     'create': function () {
         'use strict';
         this.initWorld();
@@ -154,6 +262,13 @@ module.exports = {
         this.dust_emitter.gravity = 200;
     },
 
+
+    /**
+     * Initialises the world, generates the map and populates
+     * room tiles procedurally.
+     *
+     * @attribute {Function}
+     */
     'initWorld': function () {
         'use strict';
 
@@ -173,6 +288,14 @@ module.exports = {
             }
         }
 
+        /**
+         * Populates the room in the empty map based on a
+         * pre-generated room layout from Tiled.
+         *
+         * @inner
+         * @param {Number} offsetX - Current room offset x
+         * @param {Number} offsetY - Current room offset y
+         */
         function populateRooms(offsetX, offsetY) {
             for (var y = 0; y < testRoom.length; y++) {
                 for (var x = 0; x < testRoom[0].length; x++) {
@@ -184,11 +307,17 @@ module.exports = {
         }
     },
 
+
+    /**
+     * Main update function to handle updates to object
+     * or class properties, not anything visual.
+     * 
+     * @attribute {Function}
+     */
     'update': function () {
         'use strict';
         var _this = this;
         this.game.physics.arcade.collide(this.player, this.world.layer);
-        this.game.physics.arcade.collide(this.player, this.dust_emitter);
         this.player.handleUpdate(this);
         this.game.physics.arcade.collide(this.dust_emitter, this.world.layer);
         this.game.physics.arcade.collide(this.player.projectiles, this.world.layer, function (projectile) {

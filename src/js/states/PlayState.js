@@ -34,8 +34,20 @@ var testRoom = [
 
 
 
+/**
+ * Main game loop state
+ * 
+ * @module PlayState
+ * @extends Phaser.State
+ */
 module.exports = {
 
+    /**
+     * Called when creating the play state after preloading
+     * of assets is already handled.
+     *
+     * @attribute {Function}
+     */
     'create': function () {
         'use strict';
         this.initWorld();
@@ -48,6 +60,13 @@ module.exports = {
         this.dust_emitter.gravity = 200;
     },
 
+
+    /**
+     * Initialises the world, generates the map and populates
+     * room tiles procedurally.
+     *
+     * @attribute {Function}
+     */
     'initWorld': function () {
         'use strict';
 
@@ -67,6 +86,14 @@ module.exports = {
             }
         }
 
+        /**
+         * Populates the room in the empty map based on a
+         * pre-generated room layout from Tiled.
+         *
+         * @inner
+         * @param {Number} offsetX - Current room offset x
+         * @param {Number} offsetY - Current room offset y
+         */
         function populateRooms(offsetX, offsetY) {
             for (var y = 0; y < testRoom.length; y++) {
                 for (var x = 0; x < testRoom[0].length; x++) {
@@ -78,11 +105,17 @@ module.exports = {
         }
     },
 
+
+    /**
+     * Main update function to handle updates to object
+     * or class properties, not anything visual.
+     * 
+     * @attribute {Function}
+     */
     'update': function () {
         'use strict';
         var _this = this;
         this.game.physics.arcade.collide(this.player, this.world.layer);
-        this.game.physics.arcade.collide(this.player, this.dust_emitter);
         this.player.handleUpdate(this);
         this.game.physics.arcade.collide(this.dust_emitter, this.world.layer);
         this.game.physics.arcade.collide(this.player.projectiles, this.world.layer, function (projectile) {
