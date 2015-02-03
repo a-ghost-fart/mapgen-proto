@@ -1,38 +1,7 @@
+var Config = require('../conf/Config');
 var Player = require('../characters/Player');
-
-var testMap = [
-    [0, 1, 1, 1, 1, 0],
-    [0, 1, 1, 0, 0, 0],
-    [0, 1, 1, 1, 1, 0],
-    [0, 0, 1, 0, 1, 0],
-    [0, 0, 1, 0, 0, 0],
-    [0, 0, 1, 1, 1, 0]
-];
-
-var testRoom = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
-];
-
-
+var MapFactory = require('../factories/MapFactory');
+var RoomFactory = require('../factories/RoomFactory');
 
 /**
  * Main game loop state
@@ -55,6 +24,7 @@ module.exports = {
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player, Phaser.Camera.STYLE_TOPDOWN);
 
+
         this.dust_emitter = this.game.add.emitter(0, 0, 100);
         this.dust_emitter.makeParticles('test_sprite_small');
         this.dust_emitter.gravity = 200;
@@ -70,11 +40,14 @@ module.exports = {
     'initWorld': function () {
         'use strict';
 
+        var testRoom = RoomFactory.generate();
+        var testMap = MapFactory.generate();
+
         var _this = this;
         this.world = {};
         this.world.map = this.game.add.tilemap();
         this.world.map.addTilesetImage('test_tileset');
-        this.world.layer = this.world.map.create('test', testMap[0].length * testRoom[0].length, testMap.length * testRoom[0].length, 32, 32);
+        this.world.layer = this.world.map.create('test', testMap[0].length * testRoom[0].length, testMap.length * testRoom[0].length, Config.TILE_SIZE, Config.TILE_SIZE);
         this.world.layer.resizeWorld();
         this.world.map.setCollision(1, true, this.world.layer);
 

@@ -26,6 +26,12 @@
   * [player.enablePhysics(game)](#Player#enablePhysics)
   * [player.fire(game)](#Player#fire)
   * [player.handleUpdate(game)](#Player#handleUpdate)
+* [class: MapFactory](#MapFactory)
+  * [new MapFactory()](#new_MapFactory)
+  * [mapFactory.generate()](#MapFactory#generate)
+* [class: RoomFactory](#RoomFactory)
+  * [new RoomFactory()](#new_RoomFactory)
+  * [roomFactory.generate()](#RoomFactory#generate)
  
 <a name="module_Config"></a>
 #Config
@@ -163,3 +169,41 @@ the parent class, Phaser.Sprite.
 
 - game `Phaser.Game` - The current game  
 
+<a name="MapFactory"></a>
+#class: MapFactory
+**Members**
+
+* [class: MapFactory](#MapFactory)
+  * [new MapFactory()](#new_MapFactory)
+  * [mapFactory.generate()](#MapFactory#generate)
+
+<a name="new_MapFactory"></a>
+##new MapFactory()
+Utility class with helper methods for
+generating maps
+
+<a name="MapFactory#generate"></a>
+##mapFactory.generate()
+Generates a map layout for the current world represented
+by a two dimensional array;
+
+**Returns**: `Array` - Two dimensional array representing a map  
+<a name="RoomFactory"></a>
+#class: RoomFactory
+**Members**
+
+* [class: RoomFactory](#RoomFactory)
+  * [new RoomFactory()](#new_RoomFactory)
+  * [roomFactory.generate()](#RoomFactory#generate)
+
+<a name="new_RoomFactory"></a>
+##new RoomFactory()
+Static class representing tools for
+room generation;
+
+<a name="RoomFactory#generate"></a>
+##roomFactory.generate()
+Generates a room layout for the current world represented
+by a two dimensional array;
+
+**Returns**: `Array` - Two dimensional array representing a map  

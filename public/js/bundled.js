@@ -144,6 +144,91 @@ module.exports = {
 };
 
 },{}],3:[function(require,module,exports){
+var testMap = [
+    [0, 1, 1, 1, 1, 0],
+    [0, 1, 1, 0, 0, 0],
+    [0, 1, 1, 1, 1, 0],
+    [0, 0, 1, 0, 1, 0],
+    [0, 0, 1, 0, 0, 0],
+    [0, 0, 1, 1, 1, 0]
+];
+
+/**
+ * Utility class with helper methods for
+ * generating maps
+ *
+ * @constructor
+ */
+function MapFactory() {}
+
+
+/**
+ * Generates a map layout for the current world represented
+ * by a two dimensional array;
+ *
+ * @todo At present just outputs the testMap variable because this is still a WIP
+ *
+ * @return {Array} Two dimensional array representing a map
+ */
+MapFactory.prototype.generate = function () {
+    'use strict';
+    return testMap;
+};
+
+module.exports = new MapFactory();
+
+},{}],4:[function(require,module,exports){
+var testRoom = [
+    [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
+];
+
+/**
+ * Static class representing tools for
+ * room generation;
+ *
+ * @constructor
+ */
+function RoomFactory() {
+
+}
+
+
+/**
+ * Generates a room layout for the current world represented
+ * by a two dimensional array;
+ *
+ * @todo At present just outputs the testRoom variable because this is still a WIP
+ *
+ * @return {Array} Two dimensional array representing a map
+ */
+RoomFactory.prototype.generate = function () {
+    'use strict';
+    return testRoom;
+};
+
+
+module.exports = new RoomFactory();
+
+},{}],5:[function(require,module,exports){
 var Config = require('./conf/Config');
 
 window.onload = function () {
@@ -159,7 +244,7 @@ window.onload = function () {
     window.g.state.start('load');
 };
 
-},{"./conf/Config":2,"./states/LoadingState":4,"./states/PlayState":5}],4:[function(require,module,exports){
+},{"./conf/Config":2,"./states/LoadingState":6,"./states/PlayState":7}],6:[function(require,module,exports){
 /**
  * state to handle preloading of assets for use
  * throughout the rest of the game. at present
@@ -199,42 +284,11 @@ module.exports = {
     }
 };
 
-},{}],5:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
+var Config = require('../conf/Config');
 var Player = require('../characters/Player');
-
-var testMap = [
-    [0, 1, 1, 1, 1, 0],
-    [0, 1, 1, 0, 0, 0],
-    [0, 1, 1, 1, 1, 0],
-    [0, 0, 1, 0, 1, 0],
-    [0, 0, 1, 0, 0, 0],
-    [0, 0, 1, 1, 1, 0]
-];
-
-var testRoom = [
-    [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1]
-];
-
-
+var MapFactory = require('../factories/MapFactory');
+var RoomFactory = require('../factories/RoomFactory');
 
 /**
  * Main game loop state
@@ -257,6 +311,7 @@ module.exports = {
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player, Phaser.Camera.STYLE_TOPDOWN);
 
+
         this.dust_emitter = this.game.add.emitter(0, 0, 100);
         this.dust_emitter.makeParticles('test_sprite_small');
         this.dust_emitter.gravity = 200;
@@ -272,11 +327,14 @@ module.exports = {
     'initWorld': function () {
         'use strict';
 
+        var testRoom = RoomFactory.generate();
+        var testMap = MapFactory.generate();
+
         var _this = this;
         this.world = {};
         this.world.map = this.game.add.tilemap();
         this.world.map.addTilesetImage('test_tileset');
-        this.world.layer = this.world.map.create('test', testMap[0].length * testRoom[0].length, testMap.length * testRoom[0].length, 32, 32);
+        this.world.layer = this.world.map.create('test', testMap[0].length * testRoom[0].length, testMap.length * testRoom[0].length, Config.TILE_SIZE, Config.TILE_SIZE);
         this.world.layer.resizeWorld();
         this.world.map.setCollision(1, true, this.world.layer);
 
@@ -330,4 +388,4 @@ module.exports = {
 
 };
 
-},{"../characters/Player":1}]},{},[3])
+},{"../characters/Player":1,"../conf/Config":2,"../factories/MapFactory":3,"../factories/RoomFactory":4}]},{},[5])
