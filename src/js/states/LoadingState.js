@@ -21,9 +21,6 @@ module.exports = {
         this.load.image('test_sprite_small', 'assets/sprites/test_sprite_small.png');
         this.load.image('test_tileset', 'assets/tilesets/test_tileset.png');
 
-        this.load.tilemap('test_room_1', 'assets/maps/test_room_1.json', null, Phaser.Tilemap.TILED_JSON);
-        this.load.tilemap('test_room_2', 'assets/maps/test_room_2.json', null, Phaser.Tilemap.TILED_JSON);
-
         this.load.bitmapFont('bitmap_font', 'assets/ui/font.png', 'assets/ui/font.xml');
     },
 
@@ -36,12 +33,9 @@ module.exports = {
      */
     'create': function () {
         'use strict';
-
-        this.preloadBar = this.game.add.graphics(0, 50);
-        this.preloadBar.lineStyle(3, 0xffffff, 1);
-        this.preloadBar.moveTo(0, 0);
-        this.preloadBar.lineTo(this.game.width, 0);
-        this.preloadBar.scale.x = 0; // set the bar to the beginning position
+        this.text = this.game.add.bitmapText(this.game.centerX, this.game.centerY, 'bitmap_font', 'Loading', 12);
+        this.text.align = 'center';
+        this.text.fixedToCamera = true;
     },
 
 
@@ -53,7 +47,7 @@ module.exports = {
      */
     'update': function () {
         'use strict';
-        this.preloadBar.scale.x = this.game.load.progress * 0.01;
+        this.text.destroy();
         if (this.game.load.progress === 100) {
             this.state.start('play');
         }

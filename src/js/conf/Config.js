@@ -1,3 +1,5 @@
+var tileSize = 32;
+
 /**
  * Configuration object, used for constants
  * across the application
@@ -24,9 +26,13 @@ module.exports = {
     /**
      * @attribute {Number} ROOM_SIZE - Size of a room
      */
-    'ROOM_SIZE': 32 * 40,
+    'ROOM_WIDTH': tileSize * 40,
+    /**
+     * @attribute {Number} ROOM_HEIGHT - Size of a room
+     */
+    'ROOM_HEIGHT': tileSize * 20,
     /**
      * @attribute {Number} TILE_SIZE - Size of a single tile
      */
-    'TILE_SIZE': 32
+    'TILE_SIZE': tileSize
 };

@@ -110,6 +110,8 @@ Player.prototype.handleUpdate = function (game) {
 module.exports = Player;
 
 },{}],2:[function(require,module,exports){
+var tileSize = 32;
+
 /**
  * Configuration object, used for constants
  * across the application
@@ -136,22 +138,31 @@ module.exports = {
     /**
      * @attribute {Number} ROOM_SIZE - Size of a room
      */
-    'ROOM_SIZE': 32 * 40,
+    'ROOM_WIDTH': tileSize * 40,
+    /**
+     * @attribute {Number} ROOM_HEIGHT - Size of a room
+     */
+    'ROOM_HEIGHT': tileSize * 20,
     /**
      * @attribute {Number} TILE_SIZE - Size of a single tile
      */
-    'TILE_SIZE': 32
+    'TILE_SIZE': tileSize
 };
 
 },{}],3:[function(require,module,exports){
-var testMap = [
-    [0, 1, 1, 1, 1, 0],
-    [0, 1, 1, 0, 0, 0],
-    [0, 1, 1, 1, 1, 0],
-    [0, 0, 1, 0, 1, 0],
-    [0, 0, 1, 0, 0, 0],
-    [0, 0, 1, 1, 1, 0]
-];
+
+/**
+ * Assigning indexes to cardinal directions
+ *
+ * @enum
+ * @readonly
+ */
+var Direction = {
+    'NORTH': 0,
+    'SOUTH': 1,
+    'EAST': 2,
+    'WEST': 3
+};
 
 /**
  * Utility class with helper methods for
@@ -159,21 +170,84 @@ var testMap = [
  *
  * @constructor
  */
-function MapFactory(game) {}
+function MapFactory(game) {
+    'use strict';
+    this.map = [];
+}
+
+/**
+ * Generates a map layout based on an arbitrary difficulty
+ * parameter. This parameter affects the size of the level
+ * and also the number of steps taken, though it is still
+ * pretty random.
+ *
+ * @param {Phaser.Game} game - The current game
+ * @param {Number} _difficulty - Difficulty value
+ * @return {Array} Two dimensional array representing a map
+ */
+MapFactory.prototype.generate = function (game, _difficulty) {
+    'use strict';
+    var difficulty = _difficulty;
+    var steps = difficulty * 5;
+
+    // Initialise the arrays to the correct size
+    for (var y = 0; y < difficulty; y++) {
+        this.map[y] = [];
+        for (var x = 0; x < difficulty; x++) {
+            this.map[y][x] = undefined;
+        }
+    }
+
+    var position = new Phaser.Point(
+        Math.floor(Math.random() * this.map[0].length),
+        Math.floor(Math.random() * this.map.length)
+    );
+
+    game.spawnRoom = position;
+
+    for (var i = 0; i < steps; i++) {
+        switch(Math.floor(Math.random() * 4)) {
+        case Direction.NORTH:
+            if (this.checkInBounds(position.x, position.y - 1)) {
+                position.y -= 1;
+            }
+            break;
+        case Direction.SOUTH:
+            if (this.checkInBounds(position.x, position.y + 1)) {
+                position.y += 1;
+            }
+            break;
+        case Direction.EAST:
+            if (this.checkInBounds(position.x + 1, position.y)) {
+                position.x += 1;
+            }
+            break;
+        case Direction.WEST:
+            if (this.checkInBounds(position.x - 1, position.y)) {
+                position.x -= 1;
+            }
+            break;
+        }
+        this.map[position.y][position.x] = 1;
+    }
+    return this.map;
+};
 
 
 /**
- * Generates a map layout for the current world represented
- * by a two dimensional array;
+ * Helper function to quickly check if the selected
+ * coordinate is within the bounds of the map
  *
- * @todo At present just outputs the testMap variable because this is still a WIP
- *
- * @static
- * @return {Array} Two dimensional array representing a map
+ * @param {Number} x
+ * @param {Number} y
+ * @return {Boolean}
  */
-MapFactory.prototype.generate = function () {
+MapFactory.prototype.checkInBounds = function (x, y) {
     'use strict';
-    return testMap;
+    return x > 0 &&
+           y > 0 &&
+           x < this.map[0].length &&
+           y < this.map.length;
 };
 
 module.exports = MapFactory;
@@ -201,8 +275,28 @@ function RoomFactory(game) {
  */
 RoomFactory.prototype.initRooms = function (game) {
     'use strict';
-    this.rooms.push(game.add.tilemap('test_room_1'));
-    this.rooms.push(game.add.tilemap('test_room_2'));
+    this.rooms.push([
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1]
+    ]);
 };
 
 
@@ -215,7 +309,7 @@ RoomFactory.prototype.initRooms = function (game) {
 RoomFactory.prototype.selectRandom = function () {
     'use strict';
     var rand = Math.floor(Math.random() * this.rooms.length);
-    return this.rooms[rand].layers[0].data;
+    return this.rooms[rand];
 };
 
 
@@ -268,9 +362,6 @@ module.exports = {
         this.load.image('test_sprite_small', 'assets/sprites/test_sprite_small.png');
         this.load.image('test_tileset', 'assets/tilesets/test_tileset.png');
 
-        this.load.tilemap('test_room_1', 'assets/maps/test_room_1.json', null, Phaser.Tilemap.TILED_JSON);
-        this.load.tilemap('test_room_2', 'assets/maps/test_room_2.json', null, Phaser.Tilemap.TILED_JSON);
-
         this.load.bitmapFont('bitmap_font', 'assets/ui/font.png', 'assets/ui/font.xml');
     },
 
@@ -283,12 +374,9 @@ module.exports = {
      */
     'create': function () {
         'use strict';
-
-        this.preloadBar = this.game.add.graphics(0, 50);
-        this.preloadBar.lineStyle(3, 0xffffff, 1);
-        this.preloadBar.moveTo(0, 0);
-        this.preloadBar.lineTo(this.game.width, 0);
-        this.preloadBar.scale.x = 0; // set the bar to the beginning position
+        this.text = this.game.add.bitmapText(this.game.centerX, this.game.centerY, 'bitmap_font', 'Loading', 12);
+        this.text.align = 'center';
+        this.text.fixedToCamera = true;
     },
 
 
@@ -300,7 +388,7 @@ module.exports = {
      */
     'update': function () {
         'use strict';
-        this.preloadBar.scale.x = this.game.load.progress * 0.01;
+        this.text.destroy();
         if (this.game.load.progress === 100) {
             this.state.start('play');
         }
@@ -334,7 +422,7 @@ module.exports = {
      */
     'create': function () {
         'use strict';
-        this.player = new Player(this, Config.ROOM_SIZE + 40, 30);
+        this.player = new Player(this, (this.game.spawnRoom.x * Config.ROOM_WIDTH) + 64, (this.game.spawnRoom.y * Config.ROOM_HEIGHT) + 64);
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player, Phaser.Camera.STYLE_TOPDOWN);
 
@@ -356,13 +444,10 @@ module.exports = {
     'initWorld': function () {
         'use strict';
 
-        var mapLoadText = this.game.add.bitmapText(20, 20, 'bitmap_font', 'Building map.', 12);
-        mapLoadText.fixedToCamera = true;
-
         var roomFactory = new RoomFactory(this.game);
         var mapFactory = new MapFactory(this.game);
 
-        var map = mapFactory.generate();
+        var map = mapFactory.generate(this.game, 5);
 
         var _this = this;
         this.world = {};
@@ -380,8 +465,6 @@ module.exports = {
             }
         }
 
-        mapLoadText.destroy();
-
         /**
          * Populates the room in the empty map based on a
          * pre-generated room layout from Tiled.
@@ -394,8 +477,8 @@ module.exports = {
             var room = roomFactory.selectRandom();
             for (var y = 0; y < roomFactory.dimensions.y; y++) {
                 for (var x = 0; x < roomFactory.dimensions.x; x++) {
-                    if (room[y][x].index !== -1) {
-                        _this.world.map.putTile(room[y][x].index, offsetX + x, offsetY + y, 'test');
+                    if (room[y][x] !== 0) {
+                        _this.world.map.putTile(room[y][x], offsetX + x, offsetY + y, 'test');
                     }
                 }
             }

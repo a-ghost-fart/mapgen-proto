@@ -24,7 +24,7 @@ module.exports = {
      */
     'create': function () {
         'use strict';
-        this.player = new Player(this, Config.ROOM_SIZE + 40, 30);
+        this.player = new Player(this, (this.game.spawnRoom.x * Config.ROOM_WIDTH) + 64, (this.game.spawnRoom.y * Config.ROOM_HEIGHT) + 64);
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player, Phaser.Camera.STYLE_TOPDOWN);
 
@@ -46,13 +46,10 @@ module.exports = {
     'initWorld': function () {
         'use strict';
 
-        var mapLoadText = this.game.add.bitmapText(20, 20, 'bitmap_font', 'Building map.', 12);
-        mapLoadText.fixedToCamera = true;
-
         var roomFactory = new RoomFactory(this.game);
         var mapFactory = new MapFactory(this.game);
 
-        var map = mapFactory.generate();
+        var map = mapFactory.generate(this.game, 5);
 
         var _this = this;
         this.world = {};
@@ -70,8 +67,6 @@ module.exports = {
             }
         }
 
-        mapLoadText.destroy();
-
         /**
          * Populates the room in the empty map based on a
          * pre-generated room layout from Tiled.
@@ -84,8 +79,8 @@ module.exports = {
             var room = roomFactory.selectRandom();
             for (var y = 0; y < roomFactory.dimensions.y; y++) {
                 for (var x = 0; x < roomFactory.dimensions.x; x++) {
-                    if (room[y][x].index !== -1) {
-                        _this.world.map.putTile(room[y][x].index, offsetX + x, offsetY + y, 'test');
+                    if (room[y][x] !== 0) {
+                        _this.world.map.putTile(room[y][x], offsetX + x, offsetY + y, 'test');
                     }
                 }
             }
