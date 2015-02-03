@@ -11,6 +11,11 @@ var RoomFactory = require('../factories/RoomFactory');
  */
 module.exports = {
 
+    'preload': function () {
+        'use strict';
+        this.initWorld();
+    },
+
     /**
      * Called when creating the play state after preloading
      * of assets is already handled.
@@ -19,7 +24,6 @@ module.exports = {
      */
     'create': function () {
         'use strict';
-        this.initWorld();
         this.player = new Player(this, Config.ROOM_SIZE + 40, 30);
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player, Phaser.Camera.STYLE_TOPDOWN);
@@ -42,6 +46,9 @@ module.exports = {
     'initWorld': function () {
         'use strict';
 
+        var mapLoadText = this.game.add.bitmapText(20, 20, 'bitmap_font', 'Building map.', 12);
+        mapLoadText.fixedToCamera = true;
+
         var roomFactory = new RoomFactory(this.game);
         var mapFactory = new MapFactory(this.game);
 
@@ -62,6 +69,8 @@ module.exports = {
                 }
             }
         }
+
+        mapLoadText.destroy();
 
         /**
          * Populates the room in the empty map based on a
