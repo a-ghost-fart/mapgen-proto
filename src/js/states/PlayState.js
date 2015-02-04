@@ -162,6 +162,7 @@ module.exports = {
     'update': function () {
         'use strict';
         var _this = this;
+
         this.game.physics.arcade.collide(this.player, this.world.layer);
         this.player.handleUpdate(this);
         this.game.physics.arcade.collide(this.dust_emitter, this.world.layer);

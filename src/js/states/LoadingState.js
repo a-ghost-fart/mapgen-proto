@@ -33,6 +33,7 @@ module.exports = {
      */
     'create': function () {
         'use strict';
+
         this.text = this.game.add.bitmapText(this.game.centerX, this.game.centerY, 'bitmap_font', 'Loading', 12);
         this.text.align = 'center';
         this.text.fixedToCamera = true;

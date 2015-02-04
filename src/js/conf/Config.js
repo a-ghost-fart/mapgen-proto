@@ -10,11 +10,11 @@ module.exports = {
     /**
      * @attribute {Number} WIDTH - Width of the canvas
      */
-    'WIDTH': 800,
+    'WIDTH': 864,
     /**
      * @attribute {Number} HEIGHT - Height of the canvas
      */
-    'HEIGHT': 600,
+    'HEIGHT': 486,
     /**
      * @attribute {String} TITLE - Window title
      */

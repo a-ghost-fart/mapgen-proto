@@ -123,11 +123,11 @@ module.exports = {
     /**
      * @attribute {Number} WIDTH - Width of the canvas
      */
-    'WIDTH': 800,
+    'WIDTH': 864,
     /**
      * @attribute {Number} HEIGHT - Height of the canvas
      */
-    'HEIGHT': 600,
+    'HEIGHT': 486,
     /**
      * @attribute {String} TITLE - Window title
      */
@@ -375,6 +375,7 @@ module.exports = {
      */
     'create': function () {
         'use strict';
+
         this.text = this.game.add.bitmapText(this.game.centerX, this.game.centerY, 'bitmap_font', 'Loading', 12);
         this.text.align = 'center';
         this.text.fixedToCamera = true;
@@ -561,6 +562,7 @@ module.exports = {
     'update': function () {
         'use strict';
         var _this = this;
+
         this.game.physics.arcade.collide(this.player, this.world.layer);
         this.player.handleUpdate(this);
         this.game.physics.arcade.collide(this.dust_emitter, this.world.layer);
