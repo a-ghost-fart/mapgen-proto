@@ -23,6 +23,7 @@ function Player(game, _x, _y) {
     this.projectiles = game.add.group();
     this.projectileSpeed = 400;
     this.baseGravity = 450;
+    this.hasWalljumped = false;
 
     this.enablePhysics(game);
     this.initProjectiles();
@@ -102,16 +103,19 @@ Player.prototype.handleUpdate = function (game) {
         this.body.gravity.y = 50;
     } else {
         this.body.gravity.y = this.baseGravity;
+        this.hasWalljumped = false;
     }
 
-    if (this.body.blocked.left && game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+    if (this.body.blocked.left && game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && !this.hasWalljumped) {
         this.body.velocity.y = -this.jumpSpeed;
         this.body.velocity.x = this.movementSpeed;
+        this.hasWalljumped = true;
     }
 
-    if (this.body.blocked.right && game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+    if (this.body.blocked.right && game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && !this.hasWalljumped) {
         this.body.velocity.y = -this.jumpSpeed;
         this.body.velocity.x = -this.movementSpeed;
+        this.hasWalljumped = true;
     }
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.A)) {
@@ -463,21 +467,21 @@ module.exports = {
      */
     'initWorld': function () {
         'use strict';
+        var _this = this;
 
         var roomFactory = new RoomFactory(this.game);
         var mapFactory = new MapFactory(this.game);
 
         var map = mapFactory.generate(this.game, 5);
 
-        var _this = this;
         this.world = {};
         this.world.map = this.game.add.tilemap();
         this.world.map.addTilesetImage('test_tileset');
         this.world.layer = this.world.map.create('test', map[0].length * roomFactory.dimensions.x, map.length * roomFactory.dimensions.y, Config.TILE_SIZE, Config.TILE_SIZE);
         this.world.layer.resizeWorld();
         this.world.map.setCollision(1, true, this.world.layer);
-
         this.world.map.fill(1, 0, 0, map[0].length * roomFactory.dimensions.x, map.length * roomFactory.dimensions.y, 'test');
+        this.world.furthest = findFurthestRoom();
 
         for (var y = 0; y < map.length; y++) {
             for (var x = 0; x < map[0].length; x++) {
@@ -486,6 +490,32 @@ module.exports = {
                     addBoundaries(x, y, x * roomFactory.dimensions.x, y * roomFactory.dimensions.y);
                 }
             }
+        }
+
+
+        /**
+         * Finds the furthest room from the spawn location,
+         * well, ok, it finds one of the rooms at the furthest
+         * point.
+         *
+         * @inner
+         * @return {Phaser.Point}
+         */
+        function findFurthestRoom() {
+            var max = 0;
+            var furthest = null;
+            for (var y = 0; y < map.length; y++) {
+                for (var x = 0; x < map[0].length; x++) {
+                    if (map[y][x] !== undefined && (x !== _this.game.spawnRoom.x && y !== _this.game.spawnRoom.y)) {
+                        var dist = Math.abs(x - _this.game.spawnRoom.x) + Math.abs(y - _this.game.spawnRoom.y);
+                        if (dist > max) {
+                            max = dist;
+                            furthest = new Phaser.Point(x, y);
+                        }
+                    }
+                }
+            }
+            return furthest;
         }
 
         /**

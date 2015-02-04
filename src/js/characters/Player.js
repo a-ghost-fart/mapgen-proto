@@ -22,6 +22,7 @@ function Player(game, _x, _y) {
     this.projectiles = game.add.group();
     this.projectileSpeed = 400;
     this.baseGravity = 450;
+    this.hasWalljumped = false;
 
     this.enablePhysics(game);
     this.initProjectiles();
@@ -101,16 +102,19 @@ Player.prototype.handleUpdate = function (game) {
         this.body.gravity.y = 50;
     } else {
         this.body.gravity.y = this.baseGravity;
+        this.hasWalljumped = false;
     }
 
-    if (this.body.blocked.left && game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+    if (this.body.blocked.left && game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && !this.hasWalljumped) {
         this.body.velocity.y = -this.jumpSpeed;
         this.body.velocity.x = this.movementSpeed;
+        this.hasWalljumped = true;
     }
 
-    if (this.body.blocked.right && game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+    if (this.body.blocked.right && game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR) && !this.hasWalljumped) {
         this.body.velocity.y = -this.jumpSpeed;
         this.body.velocity.x = -this.movementSpeed;
+        this.hasWalljumped = true;
     }
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.A)) {
