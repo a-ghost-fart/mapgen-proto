@@ -1,3 +1,5 @@
+var Config = require('../conf/Config');
+
 /**
  * state to handle preloading of assets for use
  * throughout the rest of the game. at present
@@ -17,11 +19,10 @@ module.exports = {
      */
     'preload': function () {
         'use strict';
+        this.load.bitmapFont('bitmap_font', 'assets/ui/font.png', 'assets/ui/font.xml');
         this.load.image('test_sprite', 'assets/sprites/test_sprite.png');
         this.load.image('test_sprite_small', 'assets/sprites/test_sprite_small.png');
         this.load.image('test_tileset', 'assets/tilesets/test_tileset.png');
-
-        this.load.bitmapFont('bitmap_font', 'assets/ui/font.png', 'assets/ui/font.xml');
     },
 
 
@@ -34,7 +35,7 @@ module.exports = {
     'create': function () {
         'use strict';
 
-        this.text = this.game.add.bitmapText(this.game.centerX, this.game.centerY, 'bitmap_font', 'Loading', 12);
+        this.text = this.game.add.bitmapText(Config.WIDTH / 2, Config.HEIGHT - 40, 'bitmap_font', 'Loading', 12);
         this.text.align = 'center';
         this.text.fixedToCamera = true;
     },
@@ -48,8 +49,8 @@ module.exports = {
      */
     'update': function () {
         'use strict';
-        this.text.destroy();
         if (this.game.load.progress === 100) {
+            this.text.destroy();
             this.state.start('play');
         }
     }
