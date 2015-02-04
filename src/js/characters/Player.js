@@ -15,7 +15,7 @@ function Player(game, _x, _y) {
     'use strict';
     Phaser.Sprite.call(this, game, _x, _y, 'test_sprite');
 
-    this.jumpSpeed = 350;
+    this.jumpSpeed = 650;
     this.movementSpeed = 250;
     this.fire_cooldown = 0;
     this.fire_rate = 400;

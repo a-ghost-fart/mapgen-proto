@@ -18,6 +18,7 @@
   * [PlayState.create()](#module_PlayState.create)
   * [PlayState.initWorld()](#module_PlayState.initWorld)
     * [initWorld~populateRooms(offsetX, offsetY)](#module_PlayState.initWorld..populateRooms)
+    * [initWorld~addBoundaries(x, y, offsetX, offsetY)](#module_PlayState.initWorld..addBoundaries)
   * [PlayState.update()](#module_PlayState.update)
 
 **Classes**
@@ -115,6 +116,7 @@ Main game loop state
   * [PlayState.create()](#module_PlayState.create)
   * [PlayState.initWorld()](#module_PlayState.initWorld)
     * [initWorld~populateRooms(offsetX, offsetY)](#module_PlayState.initWorld..populateRooms)
+    * [initWorld~addBoundaries(x, y, offsetX, offsetY)](#module_PlayState.initWorld..addBoundaries)
   * [PlayState.update()](#module_PlayState.update)
 
 <a name="module_PlayState.create"></a>

@@ -63,6 +63,7 @@ module.exports = {
             for (var x = 0; x < map[0].length; x++) {
                 if (map[y][x] === 1) {
                     populateRooms(x * roomFactory.dimensions.x, y * roomFactory.dimensions.y);
+                    addBoundaries(x, y, x * roomFactory.dimensions.x, y * roomFactory.dimensions.y);
                 }
             }
         }
@@ -82,6 +83,66 @@ module.exports = {
                     if (room[y][x] !== 0) {
                         _this.world.map.putTile(room[y][x], offsetX + x, offsetY + y, 'test');
                     }
+                }
+            }
+        }
+
+        /**
+         * Checks neighbours of the current cell and sees if a boundary
+         * wall should be drawn, to stop the player leaving the map.
+         *
+         * @inner
+         * @param {Number} x - Current room x coordinate
+         * @param {Number} y - Current room y coordinate
+         * @param {Number} offsetX - Pixel offset for room
+         * @param {Number} offsetY - Pixel offset for room
+         */
+        function addBoundaries(x, y, offsetX, offsetY) {
+            // Check top
+            if (
+                y - 1 < 0 ||
+                map[y - 1][x] === undefined
+            ) {
+                for (var i = 0; i < roomFactory.dimensions.x; i++) {
+                    _this.world.map.putTile(1, offsetX + i, offsetY, 'test');
+                }
+            }
+
+            var mapBot = (y + 1 < map.length)
+                ? map[y + 1][x]
+                : undefined;
+            // check bottom
+            if (
+                y + 1 > roomFactory.dimensions.y ||
+                y + 1 > map.length ||
+                mapBot === undefined
+            ) {
+                for (var ii = 0; ii < roomFactory.dimensions.x; ii++) {
+                    _this.world.map.putTile(1, offsetX + ii, offsetY + roomFactory.dimensions.y - 1);
+                }
+            }
+
+            // check left
+            if (
+                x - 1 < 0 ||
+                map[y][x - 1] === undefined
+            ) {
+                for (var iii = 0; iii < roomFactory.dimensions.y; iii++) {
+                    _this.world.map.putTile(1, offsetX, offsetY + iii);
+                }
+            }
+
+            var mapRight = (x + 1 < map[y].length)
+                ? map[y][x + 1]
+                : undefined;
+            // check right
+            if (
+                x + 1 > roomFactory.dimensions.x ||
+                x + 1 > map[0].length ||
+                mapRight === undefined
+            ) {
+                for (var iv = 0; iv < roomFactory.dimensions.y; iv++) {
+                    _this.world.map.putTile(1, offsetX + roomFactory.dimensions.x - 1, offsetY + iv);
                 }
             }
         }
