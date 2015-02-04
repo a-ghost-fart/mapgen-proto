@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports={
   "name": "crust-proto",
-  "version": "0.0.7",
+  "version": "0.0.84",
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-bower": "0.0.10",
@@ -303,6 +303,8 @@ MapFactory.prototype.checkInBounds = function (x, y) {
 module.exports = MapFactory;
 
 },{}],5:[function(require,module,exports){
+var Config = require('../conf/Config');
+
 /**
  * Static class representing tools for
  * room generation;
@@ -310,11 +312,10 @@ module.exports = MapFactory;
  * @constructor
  * @param {Phaser.Game} game - The current game
  */
-function RoomFactory(game) {
+function RoomFactory() {
     'use strict';
     this.rooms = [];
-    this.dimensions = new Phaser.Point(40, 20);
-    this.initRooms(game);
+    this.initRooms();
 }
 
 
@@ -326,11 +327,11 @@ function RoomFactory(game) {
 RoomFactory.prototype.initRooms = function (game) {
     'use strict';
     this.rooms.push([
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -341,11 +342,11 @@ RoomFactory.prototype.initRooms = function (game) {
         [1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
         [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
     ]);
 };
 
@@ -365,7 +366,7 @@ RoomFactory.prototype.selectRandom = function () {
 
 module.exports = RoomFactory;
 
-},{}],6:[function(require,module,exports){
+},{"../conf/Config":3}],6:[function(require,module,exports){
 var Config = require('./conf/Config');
 
 /**
@@ -451,7 +452,7 @@ module.exports = {
 var Config = require('../conf/Config');
 var Player = require('../characters/Player');
 var MapFactory = require('../factories/MapFactory');
-var RoomFactory = require('../factories/RoomFactory');
+var MapUtils = require('../util/MapUtils');
 
 /**
  * Main game loop state
@@ -490,6 +491,7 @@ module.exports = {
      * room tiles procedurally.
      *
      * @todo This takes forever, need to offload it to the preload
+     * @todo This really needs abstracting, it's getting huge
      * state or something.
      * @attribute {Function}
      */
@@ -497,7 +499,6 @@ module.exports = {
         'use strict';
         var _this = this;
 
-        var roomFactory = new RoomFactory(this.game);
         var mapFactory = new MapFactory(this.game);
 
         var map = mapFactory.generate(this.game, 5);
@@ -505,124 +506,17 @@ module.exports = {
         this.world = {};
         this.world.map = this.game.add.tilemap();
         this.world.map.addTilesetImage('test_tileset');
-        this.world.layer = this.world.map.create('test', map[0].length * roomFactory.dimensions.x, map.length * roomFactory.dimensions.y, Config.TILE_SIZE, Config.TILE_SIZE);
+        this.world.layer = this.world.map.create('test', map[0].length * Config.ROOM_TILE_WIDTH, map.length * Config.ROOM_TILE_HEIGHT, Config.TILE_SIZE, Config.TILE_SIZE);
         this.world.layer.resizeWorld();
         this.world.map.setCollision(1, true, this.world.layer);
-        this.world.map.fill(1, 0, 0, map[0].length * roomFactory.dimensions.x, map.length * roomFactory.dimensions.y, 'test');
-        this.world.furthest = findFurthestRoom();
+        this.world.map.fill(1, 0, 0, map[0].length * Config.ROOM_TILE_WIDTH, map.length * Config.ROOM_TILE_HEIGHT, 'test');
+        this.world.furthest = MapUtils.findFurthestRoom(this, map);
 
         for (var y = 0; y < map.length; y++) {
             for (var x = 0; x < map[0].length; x++) {
                 if (map[y][x] === 1) {
-                    populateRooms(x * roomFactory.dimensions.x, y * roomFactory.dimensions.y);
-                    addBoundaries(x, y, x * roomFactory.dimensions.x, y * roomFactory.dimensions.y);
-                }
-            }
-        }
-
-
-        /**
-         * Finds the furthest room from the spawn location,
-         * well, ok, it finds one of the rooms at the furthest
-         * point.
-         *
-         * @inner
-         * @return {Phaser.Point}
-         */
-        function findFurthestRoom() {
-            var max = 0;
-            var furthest = null;
-            for (var y = 0; y < map.length; y++) {
-                for (var x = 0; x < map[0].length; x++) {
-                    if (map[y][x] !== undefined && (x !== _this.game.spawnRoom.x && y !== _this.game.spawnRoom.y)) {
-                        var dist = Math.abs(x - _this.game.spawnRoom.x) + Math.abs(y - _this.game.spawnRoom.y);
-                        if (dist > max) {
-                            max = dist;
-                            furthest = new Phaser.Point(x, y);
-                        }
-                    }
-                }
-            }
-            return furthest;
-        }
-
-        /**
-         * Populates the room in the empty map based on a
-         * pre-generated room layout from Tiled.
-         *
-         * @inner
-         * @param {Number} offsetX - Current room offset x
-         * @param {Number} offsetY - Current room offset y
-         */
-        function populateRooms(offsetX, offsetY) {
-            var room = roomFactory.selectRandom();
-            for (var y = 0; y < roomFactory.dimensions.y; y++) {
-                for (var x = 0; x < roomFactory.dimensions.x; x++) {
-                    if (room[y][x] !== 0) {
-                        _this.world.map.putTile(room[y][x], offsetX + x, offsetY + y, 'test');
-                    } else {
-                        _this.world.map.removeTile(offsetX + x, offsetY + y, 'test');
-                    }
-                }
-            }
-        }
-
-        /**
-         * Checks neighbours of the current cell and sees if a boundary
-         * wall should be drawn, to stop the player leaving the map.
-         *
-         * @inner
-         * @param {Number} x - Current room x coordinate
-         * @param {Number} y - Current room y coordinate
-         * @param {Number} offsetX - Pixel offset for room
-         * @param {Number} offsetY - Pixel offset for room
-         */
-        function addBoundaries(x, y, offsetX, offsetY) {
-            // Check top
-            if (
-                y - 1 < 0 ||
-                map[y - 1][x] === undefined
-            ) {
-                for (var i = 0; i < roomFactory.dimensions.x; i++) {
-                    _this.world.map.putTile(1, offsetX + i, offsetY, 'test');
-                }
-            }
-
-            // check bottom
-            var mapBot = (y + 1 < map.length)
-                ? map[y + 1][x]
-                : undefined;
-            if (
-                y + 1 > roomFactory.dimensions.y ||
-                y + 1 > map.length ||
-                mapBot === undefined
-            ) {
-                for (var ii = 0; ii < roomFactory.dimensions.x; ii++) {
-                    _this.world.map.putTile(1, offsetX + ii, offsetY + roomFactory.dimensions.y - 1);
-                }
-            }
-
-            // check left
-            if (
-                x - 1 < 0 ||
-                map[y][x - 1] === undefined
-            ) {
-                for (var iii = 0; iii < roomFactory.dimensions.y; iii++) {
-                    _this.world.map.putTile(1, offsetX, offsetY + iii);
-                }
-            }
-
-            // check right
-            var mapRight = (x + 1 < map[y].length)
-                ? map[y][x + 1]
-                : undefined;
-            if (
-                x + 1 > roomFactory.dimensions.x ||
-                x + 1 > map[0].length ||
-                mapRight === undefined
-            ) {
-                for (var iv = 0; iv < roomFactory.dimensions.y; iv++) {
-                    _this.world.map.putTile(1, offsetX + roomFactory.dimensions.x - 1, offsetY + iv);
+                    MapUtils.populateRooms(x * Config.ROOM_TILE_WIDTH, y * Config.ROOM_TILE_HEIGHT, this);
+                    MapUtils.carveEntrances(x, y, x * Config.ROOM_TILE_WIDTH, y * Config.ROOM_TILE_HEIGHT, this, map);
                 }
             }
         }
@@ -652,4 +546,167 @@ module.exports = {
 
 };
 
-},{"../characters/Player":2,"../conf/Config":3,"../factories/MapFactory":4,"../factories/RoomFactory":5}]},{},[6])
+},{"../characters/Player":2,"../conf/Config":3,"../factories/MapFactory":4,"../util/MapUtils":9}],9:[function(require,module,exports){
+var RoomFactory = require('../factories/RoomFactory');
+var Config = require('../conf/Config');
+
+/**
+ * Set of utility functions for map generation
+ *
+ * @module MapUtils
+ */
+module.exports = {
+
+    'roomFactory': new RoomFactory(),
+
+    /**
+     * carveEntrances
+     *
+     * @inner
+     * @param {Number} x
+     * @param {Number} y
+     * @param {Number} offsetX
+     * @param {Number} offsetY
+     */
+    'carveEntrances': function carveEntrances(x, y, offsetX, offsetY, state, map) {
+        'use strict';
+
+        var mapTop = (y - 1 >= 0)
+            ? map[y - 1][x]
+            : undefined;
+        var mapLeft = (x - 1 >= 0)
+            ? map[y][x - 1]
+            : undefined;
+
+        if (mapTop !== undefined) {
+            var width = Math.floor(Math.random() * (6 - 3) + 3);
+            var start = Math.floor(Math.random() * (39 - 1) + 1);
+            for (var i = 0; i < width; i++) {
+                state.world.map.removeTile(offsetX + start + i, offsetY, 'test');
+                state.world.map.removeTile(offsetX + start + i, offsetY - 1, 'test');
+            }
+        }
+
+        if (mapLeft !== undefined) {
+            var pos = (Math.random() > 0.5) ? 1 : 16;
+            for (var ii = 0; ii < 3; ii++) {
+                state.world.map.removeTile(offsetX, offsetY + pos + ii, 'test');
+                state.world.map.removeTile(offsetX - 1, offsetY + pos + ii, 'test');
+            }
+        }
+    },
+
+
+    /**
+     * Finds the furthest room from the spawn location,
+     * well, ok, it finds one of the rooms at the furthest
+     * point.
+     *
+     * @inner
+     * @return {Phaser.Point}
+     */
+    'findFurthestRoom': function findFurthestRoom(state, map) {
+        'use strict';
+        var max = 0;
+        var furthest = null;
+        for (var y = 0; y < map.length; y++) {
+            for (var x = 0; x < map[0].length; x++) {
+                if (map[y][x] !== undefined && (x !== state.game.spawnRoom.x && y !== state.game.spawnRoom.y)) {
+                    var dist = Math.abs(x - state.game.spawnRoom.x) + Math.abs(y - state.game.spawnRoom.y);
+                    if (dist > max) {
+                        max = dist;
+                        furthest = new Phaser.Point(x, y);
+                    }
+                }
+            }
+        }
+        return furthest;
+    },
+
+
+    /**
+     * Populates the room in the empty map based on a
+     * pre-generated room layout from Tiled.
+     *
+     * @inner
+     * @param {Number} offsetX - Current room offset x
+     * @param {Number} offsetY - Current room offset y
+     */
+    'populateRooms': function populateRooms(offsetX, offsetY, state) {
+        'use strict';
+        var room = this.roomFactory.selectRandom();
+        for (var y = 0; y < Config.ROOM_TILE_HEIGHT; y++) {
+            for (var x = 0; x < Config.ROOM_TILE_WIDTH; x++) {
+                if (room[y][x] !== 0) {
+                    state.world.map.putTile(room[y][x], offsetX + x, offsetY + y, 'test');
+                } else {
+                    state.world.map.removeTile(offsetX + x, offsetY + y, 'test');
+                }
+            }
+        }
+    },
+
+
+    /**
+     * Checks neighbours of the current cell and sees if a boundary
+     * wall should be drawn, to stop the player leaving the map.
+     *
+     * @inner
+     * @param {Number} x - Current room x coordinate
+     * @param {Number} y - Current room y coordinate
+     * @param {Number} offsetX - Pixel offset for room
+     * @param {Number} offsetY - Pixel offset for room
+     */
+    'addBoundaries': function addBoundaries(map, x, y, offsetX, offsetY, game) {
+        'use strict';
+        // Check top
+        if (
+            y - 1 < 0 ||
+            map[y - 1][x] === undefined
+        ) {
+            for (var i = 0; i < Config.ROOM_TILE_WIDTH; i++) {
+                game.world.map.putTile(1, offsetX + i, offsetY, 'test');
+            }
+        }
+
+        // check bottom
+        var mapBot = (y + 1 < map.length)
+            ? map[y + 1][x]
+            : undefined;
+        if (
+            y + 1 > Config.ROOM_TILE_HEIGHT ||
+            y + 1 > map.length ||
+            mapBot === undefined
+        ) {
+            for (var ii = 0; ii < Config.ROOM_TILE_WIDTH; ii++) {
+                game.world.map.putTile(1, offsetX + ii, offsetY + Config.ROOM_TILE_HEIGHT - 1);
+            }
+        }
+
+        // check left
+        if (
+            x - 1 < 0 ||
+            map[y][x - 1] === undefined
+        ) {
+            for (var iii = 0; iii < Config.ROOM_TILE_HEIGHT; iii++) {
+                game.world.map.putTile(1, offsetX, offsetY + iii);
+            }
+        }
+
+        // check right
+        var mapRight = (x + 1 < map[y].length)
+            ? map[y][x + 1]
+            : undefined;
+        if (
+            x + 1 > Config.ROOM_TILE_WIDTH ||
+            x + 1 > map[0].length ||
+            mapRight === undefined
+        ) {
+            for (var iv = 0; iv < Config.ROOM_TILE_HEIGHT; iv++) {
+                game.world.map.putTile(1, offsetX + Config.ROOM_TILE_WIDTH - 1, offsetY + iv);
+            }
+        }
+    }
+};
+
+},{"../conf/Config":3,"../factories/RoomFactory":5}]},{},[6])
