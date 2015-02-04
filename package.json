@@ -1,16 +1,14 @@
 {
   "name": "crust-proto",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-bower": "0.0.10",
     "gulp-browserify": "^0.5.1",
+    "gulp-bump": "^0.1.13",
     "gulp-plumber": "^0.6.6",
     "gulp-rename": "^1.2.0",
     "gulp-sass": "^1.3.2",
     "jsdoc-to-markdown": "^0.5.11"
-  },
-  "scripts": {
-    "docs": "jsdoc2md src/**/*.js > README.md"
   }
 }
