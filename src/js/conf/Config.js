@@ -19,7 +19,7 @@ module.exports = {
     /**
      * @attribute {String} TITLE - Window title
      */
-    'TITLE': 'Something',
+    'TITLE': pkg.name,
     /**
      * @attribute {String} VERSION - Application version
      */
