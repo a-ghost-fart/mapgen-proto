@@ -1,4 +1,20 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+module.exports={
+  "name": "crust-proto",
+  "version": "0.0.4",
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-bower": "0.0.10",
+    "gulp-browserify": "^0.5.1",
+    "gulp-bump": "^0.1.13",
+    "gulp-plumber": "^0.6.6",
+    "gulp-rename": "^1.2.0",
+    "gulp-sass": "^1.3.2",
+    "jsdoc-to-markdown": "^0.5.11"
+  }
+}
+
+},{}],2:[function(require,module,exports){
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
@@ -132,7 +148,8 @@ Player.prototype.handleUpdate = function (game) {
 
 module.exports = Player;
 
-},{}],2:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
+var pkg = require('./../../../package.json');
 var tileSize = 32;
 
 /**
@@ -157,7 +174,7 @@ module.exports = {
     /**
      * @attribute {String} VERSION - Application version
      */
-    'VERSION': '0.0.0',
+    'VERSION': pkg.version,
     /**
      * @attribute {Number} ROOM_SIZE - Size of a room
      */
@@ -172,7 +189,7 @@ module.exports = {
     'TILE_SIZE': tileSize
 };
 
-},{}],3:[function(require,module,exports){
+},{"./../../../package.json":1}],4:[function(require,module,exports){
 
 /**
  * Assigning indexes to cardinal directions
@@ -275,7 +292,7 @@ MapFactory.prototype.checkInBounds = function (x, y) {
 
 module.exports = MapFactory;
 
-},{}],4:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 /**
  * Static class representing tools for
  * room generation;
@@ -338,7 +355,7 @@ RoomFactory.prototype.selectRandom = function () {
 
 module.exports = RoomFactory;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var Config = require('./conf/Config');
 
 /**
@@ -361,7 +378,7 @@ window.onload = function () {
     window.g.state.start('load');
 };
 
-},{"./conf/Config":2,"./states/LoadingState":6,"./states/PlayState":7}],6:[function(require,module,exports){
+},{"./conf/Config":3,"./states/LoadingState":7,"./states/PlayState":8}],7:[function(require,module,exports){
 var Config = require('../conf/Config');
 
 /**
@@ -420,7 +437,7 @@ module.exports = {
     }
 };
 
-},{"../conf/Config":2}],7:[function(require,module,exports){
+},{"../conf/Config":3}],8:[function(require,module,exports){
 var Config = require('../conf/Config');
 var Player = require('../characters/Player');
 var MapFactory = require('../factories/MapFactory');
@@ -625,4 +642,4 @@ module.exports = {
 
 };
 
-},{"../characters/Player":1,"../conf/Config":2,"../factories/MapFactory":3,"../factories/RoomFactory":4}]},{},[5])
+},{"../characters/Player":2,"../conf/Config":3,"../factories/MapFactory":4,"../factories/RoomFactory":5}]},{},[6])

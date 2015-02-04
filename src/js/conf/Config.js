@@ -1,3 +1,4 @@
+var pkg = require('./../../../package.json');
 var tileSize = 32;
 
 /**
@@ -22,7 +23,7 @@ module.exports = {
     /**
      * @attribute {String} VERSION - Application version
      */
-    'VERSION': '0.0.0',
+    'VERSION': pkg.version,
     /**
      * @attribute {Number} ROOM_SIZE - Size of a room
      */
