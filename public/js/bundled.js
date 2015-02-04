@@ -19,8 +19,9 @@ function Player(game, _x, _y) {
     this.jumpSpeed = 650;
     this.movementSpeed = 250;
     this.fire_cooldown = 0;
-    this.fire_rate = 400;
+    this.fireRate = 400;
     this.projectiles = game.add.group();
+    this.projectileSpeed = 400;
 
     this.enablePhysics(game);
     this.initProjectiles();
@@ -71,11 +72,11 @@ Player.prototype.enablePhysics = function (game) {
 Player.prototype.fire = function (game) {
     'use strict';
     if (game.time.now > this.fire_cooldown && this.projectiles.countDead() > 0) {
-        this.fire_cooldown = game.time.now + this.fire_rate;
+        this.fire_cooldown = game.time.now + this.fireRate;
         var projectile = this.projectiles.getFirstDead();
         projectile.reset(this.x, this.y);
         projectile.rotation = game.physics.arcade.angleToPointer(projectile);
-        game.physics.arcade.moveToPointer(projectile, 300);
+        game.physics.arcade.moveToPointer(projectile, this.projectileSpeed);
     }
 };
 
@@ -457,6 +458,8 @@ module.exports = {
         this.world.layer.resizeWorld();
         this.world.map.setCollision(1, true, this.world.layer);
 
+        this.world.map.fill(1, 0, 0, map[0].length * roomFactory.dimensions.x, map.length * roomFactory.dimensions.y, 'test');
+
         for (var y = 0; y < map.length; y++) {
             for (var x = 0; x < map[0].length; x++) {
                 if (map[y][x] === 1) {
@@ -480,6 +483,8 @@ module.exports = {
                 for (var x = 0; x < roomFactory.dimensions.x; x++) {
                     if (room[y][x] !== 0) {
                         _this.world.map.putTile(room[y][x], offsetX + x, offsetY + y, 'test');
+                    } else {
+                        _this.world.map.removeTile(offsetX + x, offsetY + y, 'test');
                     }
                 }
             }
@@ -506,10 +511,10 @@ module.exports = {
                 }
             }
 
+            // check bottom
             var mapBot = (y + 1 < map.length)
                 ? map[y + 1][x]
                 : undefined;
-            // check bottom
             if (
                 y + 1 > roomFactory.dimensions.y ||
                 y + 1 > map.length ||
@@ -530,10 +535,10 @@ module.exports = {
                 }
             }
 
+            // check right
             var mapRight = (x + 1 < map[y].length)
                 ? map[y][x + 1]
                 : undefined;
-            // check right
             if (
                 x + 1 > roomFactory.dimensions.x ||
                 x + 1 > map[0].length ||

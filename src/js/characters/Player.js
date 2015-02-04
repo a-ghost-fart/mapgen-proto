@@ -18,8 +18,9 @@ function Player(game, _x, _y) {
     this.jumpSpeed = 650;
     this.movementSpeed = 250;
     this.fire_cooldown = 0;
-    this.fire_rate = 400;
+    this.fireRate = 400;
     this.projectiles = game.add.group();
+    this.projectileSpeed = 400;
 
     this.enablePhysics(game);
     this.initProjectiles();
@@ -70,11 +71,11 @@ Player.prototype.enablePhysics = function (game) {
 Player.prototype.fire = function (game) {
     'use strict';
     if (game.time.now > this.fire_cooldown && this.projectiles.countDead() > 0) {
-        this.fire_cooldown = game.time.now + this.fire_rate;
+        this.fire_cooldown = game.time.now + this.fireRate;
         var projectile = this.projectiles.getFirstDead();
         projectile.reset(this.x, this.y);
         projectile.rotation = game.physics.arcade.angleToPointer(projectile);
-        game.physics.arcade.moveToPointer(projectile, 300);
+        game.physics.arcade.moveToPointer(projectile, this.projectileSpeed);
     }
 };
 
