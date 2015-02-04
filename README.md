@@ -7,7 +7,8 @@
   * [Config.HEIGHT](#module_Config.HEIGHT)
   * [Config.TITLE](#module_Config.TITLE)
   * [Config.VERSION](#module_Config.VERSION)
-  * [Config.ROOM_SIZE](#module_Config.ROOM_SIZE)
+  * [Config.ROOM_WIDTH](#module_Config.ROOM_WIDTH)
+  * [Config.ROOM_HEIGHT](#module_Config.ROOM_HEIGHT)
   * [Config.TILE_SIZE](#module_Config.TILE_SIZE)
 * [LoadingState](#module_LoadingState)
   * [LoadingState.preload()](#module_LoadingState.preload)
@@ -29,11 +30,20 @@
   * [player.handleUpdate(game)](#Player#handleUpdate)
 * [class: MapFactory](#MapFactory)
   * [new MapFactory()](#new_MapFactory)
-  * [mapFactory.generate()](#MapFactory#generate)
+  * [mapFactory.generate(game, _difficulty)](#MapFactory#generate)
+  * [mapFactory.checkInBounds(x, y)](#MapFactory#checkInBounds)
 * [class: RoomFactory](#RoomFactory)
   * [new RoomFactory(game)](#new_RoomFactory)
   * [roomFactory.initRooms(game)](#RoomFactory#initRooms)
   * [roomFactory.selectRandom()](#RoomFactory#selectRandom)
+
+**Members**
+
+* [enum: Direction](#Direction)
+  * [Direction.NORTH](#Direction.NORTH)
+  * [Direction.SOUTH](#Direction.SOUTH)
+  * [Direction.EAST](#Direction.EAST)
+  * [Direction.WEST](#Direction.WEST)
  
 <a name="module_Config"></a>
 #Config
@@ -47,7 +57,8 @@ across the application
   * [Config.HEIGHT](#module_Config.HEIGHT)
   * [Config.TITLE](#module_Config.TITLE)
   * [Config.VERSION](#module_Config.VERSION)
-  * [Config.ROOM_SIZE](#module_Config.ROOM_SIZE)
+  * [Config.ROOM_WIDTH](#module_Config.ROOM_WIDTH)
+  * [Config.ROOM_HEIGHT](#module_Config.ROOM_HEIGHT)
   * [Config.TILE_SIZE](#module_Config.TILE_SIZE)
 
 <a name="module_Config.WIDTH"></a>
@@ -58,8 +69,10 @@ across the application
 ##Config.TITLE
 <a name="module_Config.VERSION"></a>
 ##Config.VERSION
-<a name="module_Config.ROOM_SIZE"></a>
-##Config.ROOM_SIZE
+<a name="module_Config.ROOM_WIDTH"></a>
+##Config.ROOM_WIDTH
+<a name="module_Config.ROOM_HEIGHT"></a>
+##Config.ROOM_HEIGHT
 <a name="module_Config.TILE_SIZE"></a>
 ##Config.TILE_SIZE
 <a name="module_LoadingState"></a>
@@ -182,7 +195,8 @@ the parent class, Phaser.Sprite.
 
 * [class: MapFactory](#MapFactory)
   * [new MapFactory()](#new_MapFactory)
-  * [mapFactory.generate()](#MapFactory#generate)
+  * [mapFactory.generate(game, _difficulty)](#MapFactory#generate)
+  * [mapFactory.checkInBounds(x, y)](#MapFactory#checkInBounds)
 
 <a name="new_MapFactory"></a>
 ##new MapFactory()
@@ -190,11 +204,29 @@ Utility class with helper methods for
 generating maps
 
 <a name="MapFactory#generate"></a>
-##mapFactory.generate()
-Generates a map layout for the current world represented
-by a two dimensional array;
+##mapFactory.generate(game, _difficulty)
+Generates a map layout based on an arbitrary difficulty
+parameter. This parameter affects the size of the level
+and also the number of steps taken, though it is still
+pretty random.
+
+**Params**
+
+- game `Phaser.Game` - The current game  
+- _difficulty `Number` - Difficulty value  
 
 **Returns**: `Array` - Two dimensional array representing a map  
+<a name="MapFactory#checkInBounds"></a>
+##mapFactory.checkInBounds(x, y)
+Helper function to quickly check if the selected
+coordinate is within the bounds of the map
+
+**Params**
+
+- x `Number`  
+- y `Number`  
+
+**Returns**: `Boolean`  
 <a name="RoomFactory"></a>
 #class: RoomFactory
 **Members**
@@ -227,3 +259,9 @@ Generates a room layout for the current world represented
 by a two dimensional array;
 
 **Returns**: `Array` - Two dimensional array representing a map  
+<a name="Direction"></a>
+#enum: Direction
+Assigning indexes to cardinal directions
+
+**Properties**: `NORTH`, `SOUTH`, `EAST`, `WEST`  
+**Read only**: true  
