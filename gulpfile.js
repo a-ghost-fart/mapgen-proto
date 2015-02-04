@@ -8,6 +8,7 @@ var bump = require('gulp-bump');
 gulp.task('bump', function () {
     'use strict';
     return gulp.src('./package.json')
+        .pipe(plumber())
         .pipe(bump({ type: 'patch' }))
         .pipe(gulp.dest('./'));
 });

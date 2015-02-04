@@ -23,6 +23,7 @@ module.exports = {
         this.load.image('test_sprite', 'assets/sprites/test_sprite.png');
         this.load.image('test_sprite_small', 'assets/sprites/test_sprite_small.png');
         this.load.image('test_tileset', 'assets/tilesets/test_tileset.png');
+        this.load.image('test_background', 'assets/backgrounds/test_background.png');
     },
 
 

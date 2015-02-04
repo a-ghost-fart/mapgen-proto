@@ -10,6 +10,20 @@ module.exports = {
 
     'roomFactory': new RoomFactory(),
 
+
+    /**
+     * Add a background to the given room
+     *
+     * @param {Number} offsetX
+     * @param {Number} offsetY
+     * @param {Phaser.State} state
+     */
+    'addBackground': function addBackground(offsetX, offsetY, state) {
+        'use strict';
+        var bg = state.game.add.tileSprite(offsetX * Config.TILE_SIZE, offsetY * Config.TILE_SIZE, 1280, 640, 'test_background');
+    },
+
+
     /**
      * carveEntrances
      *
@@ -18,6 +32,8 @@ module.exports = {
      * @param {Number} y
      * @param {Number} offsetX
      * @param {Number} offsetY
+     * @param {Phaser.State} state
+     * @param {Array} map
      */
     'carveEntrances': function carveEntrances(x, y, offsetX, offsetY, state, map) {
         'use strict';

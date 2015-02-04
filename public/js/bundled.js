@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports={
   "name": "crust-proto",
-  "version": "0.0.84",
+  "version": "0.0.138",
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-bower": "0.0.10",
@@ -415,6 +415,7 @@ module.exports = {
         this.load.image('test_sprite', 'assets/sprites/test_sprite.png');
         this.load.image('test_sprite_small', 'assets/sprites/test_sprite_small.png');
         this.load.image('test_tileset', 'assets/tilesets/test_tileset.png');
+        this.load.image('test_background', 'assets/backgrounds/test_background.png');
     },
 
 
@@ -559,6 +560,20 @@ module.exports = {
 
     'roomFactory': new RoomFactory(),
 
+
+    /**
+     * Add a background to the given room
+     *
+     * @param {Number} offsetX
+     * @param {Number} offsetY
+     * @param {Phaser.State} state
+     */
+    'addBackground': function addBackground(offsetX, offsetY, state) {
+        'use strict';
+        var bg = state.game.add.tileSprite(offsetX * Config.TILE_SIZE, offsetY * Config.TILE_SIZE, 1280, 640, 'test_background');
+    },
+
+
     /**
      * carveEntrances
      *
@@ -567,6 +582,8 @@ module.exports = {
      * @param {Number} y
      * @param {Number} offsetX
      * @param {Number} offsetY
+     * @param {Phaser.State} state
+     * @param {Array} map
      */
     'carveEntrances': function carveEntrances(x, y, offsetX, offsetY, state, map) {
         'use strict';
