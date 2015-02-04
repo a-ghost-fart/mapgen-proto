@@ -1,3 +1,5 @@
+var Config = require('../conf/Config');
+
 /**
  * Static class representing tools for
  * room generation;
@@ -8,7 +10,7 @@
 function RoomFactory(game) {
     'use strict';
     this.rooms = [];
-    this.dimensions = new Phaser.Point(40, 20);
+    this.dimensions = new Phaser.Point(Config.ROOM_TILE_WIDTH, Config.ROOM_TILE_HEIGHT);
     this.initRooms(game);
 }
 

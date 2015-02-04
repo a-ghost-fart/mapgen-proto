@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports={
   "name": "crust-proto",
-  "version": "0.0.5",
+  "version": "0.0.7",
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-bower": "0.0.10",
@@ -151,6 +151,8 @@ module.exports = Player;
 },{}],3:[function(require,module,exports){
 var pkg = require('./../../../package.json');
 var tileSize = 32;
+var roomWidth = 40;
+var roomHeight = 20;
 
 /**
  * Configuration object, used for constants
@@ -176,13 +178,21 @@ module.exports = {
      */
     'VERSION': pkg.version,
     /**
+     * @attribute {Number} ROOM_TILE_WIDTH - Rooms are how many tiles wide?
+     */
+    'ROOM_TILE_WIDTH': roomWidth,
+    /**
+     * @attribute {Number} ROOM_TILE_HEIGHT - Rooms are how many tiles high?
+     */
+    'ROOM_TILE_HEIGHT': roomHeight,
+    /**
      * @attribute {Number} ROOM_SIZE - Size of a room
      */
-    'ROOM_WIDTH': tileSize * 40,
+    'ROOM_WIDTH': tileSize * roomWidth,
     /**
      * @attribute {Number} ROOM_HEIGHT - Size of a room
      */
-    'ROOM_HEIGHT': tileSize * 20,
+    'ROOM_HEIGHT': tileSize * roomHeight,
     /**
      * @attribute {Number} TILE_SIZE - Size of a single tile
      */

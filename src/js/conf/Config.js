@@ -1,5 +1,7 @@
 var pkg = require('./../../../package.json');
 var tileSize = 32;
+var roomWidth = 40;
+var roomHeight = 20;
 
 /**
  * Configuration object, used for constants
@@ -25,13 +27,21 @@ module.exports = {
      */
     'VERSION': pkg.version,
     /**
+     * @attribute {Number} ROOM_TILE_WIDTH - Rooms are how many tiles wide?
+     */
+    'ROOM_TILE_WIDTH': roomWidth,
+    /**
+     * @attribute {Number} ROOM_TILE_HEIGHT - Rooms are how many tiles high?
+     */
+    'ROOM_TILE_HEIGHT': roomHeight,
+    /**
      * @attribute {Number} ROOM_SIZE - Size of a room
      */
-    'ROOM_WIDTH': tileSize * 40,
+    'ROOM_WIDTH': tileSize * roomWidth,
     /**
      * @attribute {Number} ROOM_HEIGHT - Size of a room
      */
-    'ROOM_HEIGHT': tileSize * 20,
+    'ROOM_HEIGHT': tileSize * roomHeight,
     /**
      * @attribute {Number} TILE_SIZE - Size of a single tile
      */
