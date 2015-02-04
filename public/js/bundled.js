@@ -16,12 +16,13 @@ function Player(game, _x, _y) {
     'use strict';
     Phaser.Sprite.call(this, game, _x, _y, 'test_sprite');
 
-    this.jumpSpeed = 650;
+    this.jumpSpeed = 350;
     this.movementSpeed = 250;
     this.fire_cooldown = 0;
     this.fireRate = 400;
     this.projectiles = game.add.group();
     this.projectileSpeed = 400;
+    this.baseGravity = 450;
 
     this.enablePhysics(game);
     this.initProjectiles();
@@ -57,7 +58,8 @@ Player.prototype.enablePhysics = function (game) {
     'use strict';
         game.physics.arcade.enable(this);
         this.body.bounce.y = 0;
-        this.body.gravity.y = 450;
+        this.body.allowGravity = true;
+        this.body.gravity.y = this.baseGravity;
         this.anchor.setTo(0.5, 0);
         this.body.collideWorldBounds = true;
 };
@@ -94,6 +96,22 @@ Player.prototype.handleUpdate = function (game) {
 
     if (game.input.activePointer.isDown) {
         this.fire(game);
+    }
+
+    if (this.body.blocked.left || this.body.blocked.right) {
+        this.body.gravity.y = 50;
+    } else {
+        this.body.gravity.y = this.baseGravity;
+    }
+
+    if (this.body.blocked.left && game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+        this.body.velocity.y = -this.jumpSpeed;
+        this.body.velocity.x = this.movementSpeed;
+    }
+
+    if (this.body.blocked.right && game.input.keyboard.isDown(Phaser.Keyboard.SPACEBAR)) {
+        this.body.velocity.y = -this.jumpSpeed;
+        this.body.velocity.x = -this.movementSpeed;
     }
 
     if (game.input.keyboard.isDown(Phaser.Keyboard.A)) {
