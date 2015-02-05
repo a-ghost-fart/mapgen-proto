@@ -31,7 +31,9 @@ module.exports = {
         // Ideally this needs to go somewhere, not sure where yet.
         this.dust_emitter = this.game.add.emitter(0, 0, 100);
         this.dust_emitter.makeParticles('test_sprite_small');
-        this.dust_emitter.gravity = 200;
+        this.dust_emitter.bounce.y = 0.4;
+        this.dust_emitter.alpha = 0.3;
+        this.dust_emitter.gravity = 250;
     },
 
 

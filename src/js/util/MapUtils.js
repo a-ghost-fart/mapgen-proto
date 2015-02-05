@@ -47,18 +47,18 @@ module.exports = {
 
         if (mapTop !== undefined) {
             var width = Math.floor(Math.random() * (6 - 3) + 3);
-            var start = Math.floor(Math.random() * (39 - 1) + 1);
+            var start = Math.floor(Math.random() * (37 - 2) + 2);
             for (var i = 0; i < width; i++) {
-                state.world.map.removeTile(offsetX + start + i, offsetY, 'test');
-                state.world.map.removeTile(offsetX + start + i, offsetY - 1, 'test');
+                state.world.map.putTile(2, offsetX + start + i, offsetY, 'test');
+                state.world.map.putTile(2, offsetX + start + i, offsetY - 1, 'test');
             }
         }
 
         if (mapLeft !== undefined) {
             var pos = (Math.random() > 0.5) ? 1 : 16;
             for (var ii = 0; ii < 3; ii++) {
-                state.world.map.removeTile(offsetX, offsetY + pos + ii, 'test');
-                state.world.map.removeTile(offsetX - 1, offsetY + pos + ii, 'test');
+                state.world.map.putTile(2, offsetX, offsetY + pos + ii, 'test');
+                state.world.map.putTile(2, offsetX - 1, offsetY + pos + ii, 'test');
             }
         }
     },
@@ -104,11 +104,7 @@ module.exports = {
         var room = this.roomFactory.selectRandom();
         for (var y = 0; y < Config.ROOM_TILE_HEIGHT; y++) {
             for (var x = 0; x < Config.ROOM_TILE_WIDTH; x++) {
-                if (room[y][x] !== 0) {
-                    state.world.map.putTile(room[y][x], offsetX + x, offsetY + y, 'test');
-                } else {
-                    state.world.map.removeTile(offsetX + x, offsetY + y, 'test');
-                }
+                state.world.map.putTile(room[y][x], offsetX + x, offsetY + y, 'test');
             }
         }
     },
