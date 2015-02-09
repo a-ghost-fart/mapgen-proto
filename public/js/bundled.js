@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports={
   "name": "crust-proto",
-  "version": "0.0.165",
+  "version": "0.0.197",
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-bower": "0.0.10",
@@ -200,6 +200,16 @@ module.exports = {
 };
 
 },{"./../../../package.json":1}],4:[function(require,module,exports){
+var Item = require('../items/Item');
+
+module.exports = {
+    'generateItem': function (game, x, y) {
+        'use strict';
+        return new Item(game, x, y, 'Test item', 'This is a test item.');
+    }
+};
+
+},{"../items/Item":8}],5:[function(require,module,exports){
 
 /**
  * Assigning indexes to cardinal directions
@@ -302,7 +312,7 @@ MapFactory.prototype.checkInBounds = function (x, y) {
 
 module.exports = MapFactory;
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var Config = require('../conf/Config');
 
 /**
@@ -366,7 +376,7 @@ RoomFactory.prototype.selectRandom = function () {
 
 module.exports = RoomFactory;
 
-},{"../conf/Config":3}],6:[function(require,module,exports){
+},{"../conf/Config":3}],7:[function(require,module,exports){
 var Config = require('./conf/Config');
 
 /**
@@ -389,7 +399,30 @@ window.onload = function () {
     window.g.state.start('load');
 };
 
-},{"./conf/Config":3,"./states/LoadingState":7,"./states/PlayState":8}],7:[function(require,module,exports){
+},{"./conf/Config":3,"./states/LoadingState":9,"./states/PlayState":10}],8:[function(require,module,exports){
+Item.prototype = Object.create(Phaser.Sprite.prototype);
+Item.prototype.constructor = Item;
+
+function Item(game, x, y, _name, _description) {
+    'use strict';
+    Phaser.Sprite.call(this, game, x, y, 'test_sprite');
+    this.name = _name;
+    this.description = _description;
+
+    this.enablePhysics(game);
+}
+
+Item.prototype.enablePhysics = function (game) {
+    'use strict';
+    game.physics.arcade.enable(this);
+    this.body.bounce.y = 0.5;
+    this.body.gravity.y = 300;
+    this.anchor.setTo(0.5, 0.5);
+};
+
+module.exports = Item;
+
+},{}],9:[function(require,module,exports){
 var Config = require('../conf/Config');
 
 /**
@@ -449,11 +482,12 @@ module.exports = {
     }
 };
 
-},{"../conf/Config":3}],8:[function(require,module,exports){
+},{"../conf/Config":3}],10:[function(require,module,exports){
 var Config = require('../conf/Config');
 var Player = require('../characters/Player');
 var MapFactory = require('../factories/MapFactory');
 var MapUtils = require('../util/MapUtils');
+var ItemFactory = require('../factories/ItemFactory');
 
 /**
  * Main game loop state
@@ -481,11 +515,11 @@ module.exports = {
         this.game.camera.follow(this.player, Phaser.Camera.STYLE_TOPDOWN);
 
         // Ideally this needs to go somewhere, not sure where yet.
-        this.dust_emitter = this.game.add.emitter(0, 0, 100);
-        this.dust_emitter.makeParticles('test_sprite_small');
-        this.dust_emitter.bounce.y = 0.4;
-        this.dust_emitter.alpha = 0.3;
-        this.dust_emitter.gravity = 250;
+        this.dustEmitter = this.game.add.emitter(0, 0, 100);
+        this.dustEmitter.makeParticles('test_sprite_small');
+        this.dustEmitter.bounce.y = 0.4;
+        this.dustEmitter.alpha = 0.3;
+        this.dustEmitter.gravity = 250;
     },
 
 
@@ -515,6 +549,12 @@ module.exports = {
         this.world.map.fill(1, 0, 0, map[0].length * Config.ROOM_TILE_WIDTH, map.length * Config.ROOM_TILE_HEIGHT, 'test');
         this.world.furthest = MapUtils.findFurthestRoom(this, map);
 
+        var xx = this.world.furthest.x * Config.ROOM_WIDTH + 60;
+        var yy = this.world.furthest.y * Config.ROOM_HEIGHT + 60;
+
+        this.item = ItemFactory.generateItem(this.game, xx, yy);
+        console.log(this.item);
+
         for (var y = 0; y < map.length; y++) {
             for (var x = 0; x < map[0].length; x++) {
                 if (map[y][x] === 1) {
@@ -538,18 +578,19 @@ module.exports = {
 
         this.game.physics.arcade.collide(this.player, this.world.layer);
         this.player.handleUpdate(this);
-        this.game.physics.arcade.collide(this.dust_emitter, this.world.layer);
+        this.game.physics.arcade.collide(this.dustEmitter, this.world.layer);
+        this.game.physics.arcade.collide(this.item, this.world.layer);
         this.game.physics.arcade.collide(this.player.projectiles, this.world.layer, function (projectile) {
-            _this.dust_emitter.x = projectile.x;
-            _this.dust_emitter.y = projectile.y;
-            _this.dust_emitter.start(true, 2000, null, 10);
+            _this.dustEmitter.x = projectile.x;
+            _this.dustEmitter.y = projectile.y;
+            _this.dustEmitter.start(true, 2000, null, 10);
             projectile.kill();
         });
     },
 
 };
 
-},{"../characters/Player":2,"../conf/Config":3,"../factories/MapFactory":4,"../util/MapUtils":9}],9:[function(require,module,exports){
+},{"../characters/Player":2,"../conf/Config":3,"../factories/ItemFactory":4,"../factories/MapFactory":5,"../util/MapUtils":11}],11:[function(require,module,exports){
 var RoomFactory = require('../factories/RoomFactory');
 var Config = require('../conf/Config');
 
@@ -724,4 +765,4 @@ module.exports = {
     }
 };
 
-},{"../conf/Config":3,"../factories/RoomFactory":5}]},{},[6])
+},{"../conf/Config":3,"../factories/RoomFactory":6}]},{},[7])
