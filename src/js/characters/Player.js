@@ -1,3 +1,5 @@
+var Inventory = require('../items/Inventory');
+
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
@@ -23,6 +25,7 @@ function Player(game, _x, _y) {
     this.projectileSpeed = 400;
     this.baseGravity = 450;
     this.hasWalljumped = false;
+    this.inventory = new Inventory(12);
 
     this.enablePhysics(game);
     this.initProjectiles();
@@ -80,6 +83,20 @@ Player.prototype.fire = function (game) {
         projectile.rotation = game.physics.arcade.angleToPointer(projectile);
         game.physics.arcade.moveToPointer(projectile, this.projectileSpeed);
     }
+};
+
+
+/**
+ * Called on collision with a consumable,
+ * adds the item to the inventory in the first
+ * available slot
+ *
+ * @method
+ * @param {Item} item
+ */
+Player.prototype.pickUp = function (item) {
+    'use strict';
+    this.inventory.add(item);
 };
 
 

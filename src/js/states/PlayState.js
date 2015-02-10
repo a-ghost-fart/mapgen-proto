@@ -12,6 +12,12 @@ var ItemFactory = require('../factories/ItemFactory');
  */
 module.exports = {
 
+    /**
+     * Called on loading of the state, before
+     * anything else
+     *
+     * @attribute {Function}
+     */
     'preload': function () {
         'use strict';
         this.initWorld();
@@ -95,15 +101,23 @@ module.exports = {
         var _this = this;
 
         this.game.physics.arcade.collide(this.player, this.world.layer);
-        this.player.handleUpdate(this);
-        this.game.physics.arcade.collide(this.dustEmitter, this.world.layer);
-        this.game.physics.arcade.collide(this.collectables, this.world.layer);
         this.game.physics.arcade.collide(this.player.projectiles, this.world.layer, function (projectile) {
             _this.dustEmitter.x = projectile.x;
             _this.dustEmitter.y = projectile.y;
             _this.dustEmitter.start(true, 2000, null, 10);
             projectile.kill();
         });
+
+        this.game.physics.arcade.collide(this.player, this.collectables, function (player, collectable) {
+            player.pickUp(collectable);
+            collectable.destroy();
+        });
+
+        this.player.handleUpdate(this);
+        this.game.physics.arcade.collide(this.dustEmitter, this.world.layer);
+
+        this.game.physics.arcade.collide(this.collectables, this.world.layer);
+
     },
 
 };

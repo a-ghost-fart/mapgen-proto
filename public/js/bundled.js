@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports={
   "name": "crust-proto",
-  "version": "0.0.197",
+  "version": "0.0.239",
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-bower": "0.0.10",
@@ -15,6 +15,8 @@ module.exports={
 }
 
 },{}],2:[function(require,module,exports){
+var Inventory = require('../items/Inventory');
+
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
 
@@ -40,6 +42,7 @@ function Player(game, _x, _y) {
     this.projectileSpeed = 400;
     this.baseGravity = 450;
     this.hasWalljumped = false;
+    this.inventory = new Inventory(12);
 
     this.enablePhysics(game);
     this.initProjectiles();
@@ -101,6 +104,20 @@ Player.prototype.fire = function (game) {
 
 
 /**
+ * Called on collision with a consumable,
+ * adds the item to the inventory in the first
+ * available slot
+ *
+ * @method
+ * @param {Item} item
+ */
+Player.prototype.pickUp = function (item) {
+    'use strict';
+    this.inventory.add(item);
+};
+
+
+/**
  * Player's update method as update() is taken by
  * the parent class, Phaser.Sprite.
  *
@@ -148,7 +165,7 @@ Player.prototype.handleUpdate = function (game) {
 
 module.exports = Player;
 
-},{}],3:[function(require,module,exports){
+},{"../items/Inventory":9}],3:[function(require,module,exports){
 var pkg = require('./../../../package.json');
 var tileSize = 32;
 var roomWidth = 40;
@@ -200,16 +217,38 @@ module.exports = {
 };
 
 },{"./../../../package.json":1}],4:[function(require,module,exports){
+module.exports = {
+    'ARMOUR': 0,
+    'WEAPON': 1,
+    'SPELL': 2,
+    'CONSUMABLE': 3
+};
+
+},{}],5:[function(require,module,exports){
 var Item = require('../items/Item');
 
+/**
+ * Simple factory to generate test items,
+ * might well be destroyed in favour of
+ * an item database.
+ *
+ * @module ItemFactory
+ * @readonly
+ */
 module.exports = {
+    /**
+     * Generates a simple test item
+     *
+     * @inner
+     * @return {Item}
+     */
     'generateItem': function (game, x, y) {
         'use strict';
         return new Item(game, x, y, 'Test item', 'This is a test item.');
     }
 };
 
-},{"../items/Item":8}],5:[function(require,module,exports){
+},{"../items/Item":10}],6:[function(require,module,exports){
 
 /**
  * Assigning indexes to cardinal directions
@@ -312,7 +351,7 @@ MapFactory.prototype.checkInBounds = function (x, y) {
 
 module.exports = MapFactory;
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 var Config = require('../conf/Config');
 
 /**
@@ -320,7 +359,6 @@ var Config = require('../conf/Config');
  * room generation;
  *
  * @constructor
- * @param {Phaser.Game} game - The current game
  */
 function RoomFactory() {
     'use strict';
@@ -376,7 +414,7 @@ RoomFactory.prototype.selectRandom = function () {
 
 module.exports = RoomFactory;
 
-},{"../conf/Config":3}],7:[function(require,module,exports){
+},{"../conf/Config":3}],8:[function(require,module,exports){
 var Config = require('./conf/Config');
 
 /**
@@ -399,19 +437,181 @@ window.onload = function () {
     window.g.state.start('load');
 };
 
-},{"./conf/Config":3,"./states/LoadingState":9,"./states/PlayState":10}],8:[function(require,module,exports){
+},{"./conf/Config":3,"./states/LoadingState":11,"./states/PlayState":12}],9:[function(require,module,exports){
+var ItemType = require('../enums/ItemType');
+
+/**
+ * Creates an inventory to handle both what items
+ * are collected / dropped / destroyed but also
+ * which slot they exist in for the ui.
+ *
+ * @constructor
+ * @param {Number} size - Size of the inventory to create
+ */
+function Inventory(size) {
+    'use strict';
+    // Yeah, correct the size for 0 indexing
+    this.size = size - 1;
+    this.items = new Array(size - 1);
+    this.weight = 0.0;
+    this._item_buffer = undefined;
+}
+
+
+/**
+ * Drop the item in the specified slot
+ *
+ * @method
+ * @param {Number} slot
+ * @return {undefined}
+ */
+Inventory.prototype.drop = function (slot) {
+    'use strict';
+    if (!slot) {
+        throw new Error('No slot defined, cannot drop item.');
+    }
+    var item = this.items[slot];
+    this.items[slot] = undefined;
+    return item;
+};
+
+
+/**
+ * Add item to specified slot, or first available
+ * if not specified
+ *
+ * @method
+ * @param {Item} item
+ * @param {Number} slot
+ */
+Inventory.prototype.add = function (item, slot) {
+    'use strict';
+    if (!item) {
+        throw new Error('Cannot add item to inventory as no item supplied.');
+    }
+    if (!slot) {
+        var s = this.find_empty_slot();
+        if (s !== null) {
+            this.items[s] = item;
+        } else {
+            console.log('No free slot found, inventory full!');
+        }
+    } else {
+        if (slot > this.size) {
+            throw new Error('Attempted to add item to slot ' + slot + ' but that is beyond the inventory size.');
+        }
+        if (this.items[slot] !== undefined) {
+            throw new Error('Cannot add item to slot ' + slot + ' as there is already an item there.');
+        } else {
+            this.items[slot] = item;
+        }
+    }
+};
+
+
+/**
+ * Activates the item in the selected slot
+ *
+ * @method
+ * @param {Number} slot
+ * @return {undefined}
+ */
+Inventory.prototype.useItem = function (slot) {
+    'use strict';
+    try {
+        var item = this.getItemInSlot(slot);
+        if (item.type === ItemType.CONSUMABLE) {
+            console.log('it\'s a consumable');
+        } else if (item.type === ItemType.ARMOUR) {
+            console.log('it\'s armour');
+        } else if (item.type === ItemType.WEAPON) {
+            console.log('it\'s a weapon');
+        }
+    } catch (e) {
+        console.error(e);
+    }
+};
+
+
+/**
+ * Finds the first available empty slot.
+ *
+ * @method
+ * @return {Number}
+ */
+Inventory.prototype.findEmptySlot = function () {
+    'use strict';
+    for (var i = 0; i < this.items.length; i++) {
+        if (this.items[i] === undefined) {
+            return i;
+        }
+    }
+    return null;
+};
+
+
+/**
+ * Returns the item found in the specified slot.
+ *
+ * @method
+ * @param {Number} slot
+ * @return {Item}
+ */
+Inventory.prototype.getItemInSlot = function (slot) {
+    'use strict';
+    if (!this.items[slot]) {
+        throw new Error('No item found in slot ' + slot);
+    } else {
+        return this.items[slot];
+    }
+};
+
+
+/**
+ * List all items in the inventory
+ *
+ * @method
+ * @todo - make this do something
+ * @return {undefined}
+ */
+Inventory.prototype.list = function () {
+    'use strict';
+    console.log(this.items);
+};
+
+
+module.exports = Inventory;
+
+},{"../enums/ItemType":4}],10:[function(require,module,exports){
 Item.prototype = Object.create(Phaser.Sprite.prototype);
 Item.prototype.constructor = Item;
 
+/**
+ * Item
+ *
+ * @constructor
+ * @param {Phaser.Game} game - the current game
+ * @param {Number} x - spawn x coordinate
+ * @param {Number} y - spawn y coordinate
+ * @param {String} _name - item name
+ * @param {String} _description - item description
+ */
 function Item(game, x, y, _name, _description) {
     'use strict';
-    Phaser.Sprite.call(this, game, x, y, 'test_sprite');
+    Phaser.Sprite.call(this, game, x, y, 'test_sprite_small');
     this.name = _name;
     this.description = _description;
 
     this.enablePhysics(game);
 }
 
+
+/**
+ * enablePhysics
+ *
+ * @method
+ * @param {Phaser.Game}
+ */
 Item.prototype.enablePhysics = function (game) {
     'use strict';
     game.physics.arcade.enable(this);
@@ -422,7 +622,7 @@ Item.prototype.enablePhysics = function (game) {
 
 module.exports = Item;
 
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var Config = require('../conf/Config');
 
 /**
@@ -482,7 +682,7 @@ module.exports = {
     }
 };
 
-},{"../conf/Config":3}],10:[function(require,module,exports){
+},{"../conf/Config":3}],12:[function(require,module,exports){
 var Config = require('../conf/Config');
 var Player = require('../characters/Player');
 var MapFactory = require('../factories/MapFactory');
@@ -497,6 +697,12 @@ var ItemFactory = require('../factories/ItemFactory');
  */
 module.exports = {
 
+    /**
+     * Called on loading of the state, before
+     * anything else
+     *
+     * @attribute {Function}
+     */
     'preload': function () {
         'use strict';
         this.initWorld();
@@ -520,6 +726,10 @@ module.exports = {
         this.dustEmitter.bounce.y = 0.4;
         this.dustEmitter.alpha = 0.3;
         this.dustEmitter.gravity = 250;
+
+        this.collectables = this.game.add.group();
+        this.collectables.enableBody = true;
+        this.collectables.add(this.item);
     },
 
 
@@ -553,7 +763,6 @@ module.exports = {
         var yy = this.world.furthest.y * Config.ROOM_HEIGHT + 60;
 
         this.item = ItemFactory.generateItem(this.game, xx, yy);
-        console.log(this.item);
 
         for (var y = 0; y < map.length; y++) {
             for (var x = 0; x < map[0].length; x++) {
@@ -577,20 +786,28 @@ module.exports = {
         var _this = this;
 
         this.game.physics.arcade.collide(this.player, this.world.layer);
-        this.player.handleUpdate(this);
-        this.game.physics.arcade.collide(this.dustEmitter, this.world.layer);
-        this.game.physics.arcade.collide(this.item, this.world.layer);
         this.game.physics.arcade.collide(this.player.projectiles, this.world.layer, function (projectile) {
             _this.dustEmitter.x = projectile.x;
             _this.dustEmitter.y = projectile.y;
             _this.dustEmitter.start(true, 2000, null, 10);
             projectile.kill();
         });
+
+        this.game.physics.arcade.collide(this.player, this.collectables, function (player, collectable) {
+            player.pickUp(collectable);
+            collectable.destroy();
+        });
+
+        this.player.handleUpdate(this);
+        this.game.physics.arcade.collide(this.dustEmitter, this.world.layer);
+
+        this.game.physics.arcade.collide(this.collectables, this.world.layer);
+
     },
 
 };
 
-},{"../characters/Player":2,"../conf/Config":3,"../factories/ItemFactory":4,"../factories/MapFactory":5,"../util/MapUtils":11}],11:[function(require,module,exports){
+},{"../characters/Player":2,"../conf/Config":3,"../factories/ItemFactory":5,"../factories/MapFactory":6,"../util/MapUtils":13}],13:[function(require,module,exports){
 var RoomFactory = require('../factories/RoomFactory');
 var Config = require('../conf/Config');
 
@@ -765,4 +982,4 @@ module.exports = {
     }
 };
 
-},{"../conf/Config":3,"../factories/RoomFactory":6}]},{},[7])
+},{"../conf/Config":3,"../factories/RoomFactory":7}]},{},[8])

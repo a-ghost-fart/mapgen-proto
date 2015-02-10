@@ -13,7 +13,7 @@ gulp.task('bump', function () {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('build:js', function () {
+gulp.task('build:js', ['bump'], function () {
     'use strict';
     return gulp.src('src/js/app.js')
         .pipe(plumber())
@@ -30,7 +30,7 @@ gulp.task('build:sass', function () {
         .pipe(gulp.dest('public/css'));
 });
 
-gulp.task('build', ['build:js', 'build:sass', 'bump']);
+gulp.task('build', ['build:js', 'build:sass']);
 
 gulp.task('default', function () {
     'use strict';

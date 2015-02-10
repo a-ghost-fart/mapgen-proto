@@ -5,7 +5,6 @@ var Config = require('../conf/Config');
  * room generation;
  *
  * @constructor
- * @param {Phaser.Game} game - The current game
  */
 function RoomFactory() {
     'use strict';
