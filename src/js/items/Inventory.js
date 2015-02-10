@@ -50,7 +50,7 @@ Inventory.prototype.add = function (item, slot) {
         throw new Error('Cannot add item to inventory as no item supplied.');
     }
     if (!slot) {
-        var s = this.find_empty_slot();
+        var s = this.findEmptySlot();
         if (s !== null) {
             this.items[s] = item;
         } else {

@@ -1,4 +1,5 @@
 var Inventory = require('../items/Inventory');
+var Journal = require('../quest/Journal');
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
@@ -26,6 +27,7 @@ function Player(game, _x, _y) {
     this.baseGravity = 450;
     this.hasWalljumped = false;
     this.inventory = new Inventory(12);
+    this.journal = new Journal();
 
     this.enablePhysics(game);
     this.initProjectiles();

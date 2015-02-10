@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports={
   "name": "crust-proto",
-  "version": "0.0.239",
+  "version": "0.0.245",
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-bower": "0.0.10",
@@ -16,6 +16,7 @@ module.exports={
 
 },{}],2:[function(require,module,exports){
 var Inventory = require('../items/Inventory');
+var Journal = require('../quest/Journal');
 
 Player.prototype = Object.create(Phaser.Sprite.prototype);
 Player.prototype.constructor = Player;
@@ -43,6 +44,7 @@ function Player(game, _x, _y) {
     this.baseGravity = 450;
     this.hasWalljumped = false;
     this.inventory = new Inventory(12);
+    this.journal = new Journal();
 
     this.enablePhysics(game);
     this.initProjectiles();
@@ -165,7 +167,7 @@ Player.prototype.handleUpdate = function (game) {
 
 module.exports = Player;
 
-},{"../items/Inventory":9}],3:[function(require,module,exports){
+},{"../items/Inventory":9,"../quest/Journal":11}],3:[function(require,module,exports){
 var pkg = require('./../../../package.json');
 var tileSize = 32;
 var roomWidth = 40;
@@ -217,6 +219,12 @@ module.exports = {
 };
 
 },{"./../../../package.json":1}],4:[function(require,module,exports){
+/**
+ * Enumerator of all item types
+ *
+ * @enum
+ * @readonly
+ */
 module.exports = {
     'ARMOUR': 0,
     'WEAPON': 1,
@@ -437,7 +445,7 @@ window.onload = function () {
     window.g.state.start('load');
 };
 
-},{"./conf/Config":3,"./states/LoadingState":11,"./states/PlayState":12}],9:[function(require,module,exports){
+},{"./conf/Config":3,"./states/LoadingState":13,"./states/PlayState":14}],9:[function(require,module,exports){
 var ItemType = require('../enums/ItemType');
 
 /**
@@ -490,7 +498,7 @@ Inventory.prototype.add = function (item, slot) {
         throw new Error('Cannot add item to inventory as no item supplied.');
     }
     if (!slot) {
-        var s = this.find_empty_slot();
+        var s = this.findEmptySlot();
         if (s !== null) {
             this.items[s] = item;
         } else {
@@ -623,6 +631,116 @@ Item.prototype.enablePhysics = function (game) {
 module.exports = Item;
 
 },{}],11:[function(require,module,exports){
+var Quest = require('./Quest');
+
+function Journal() {
+    'use strict';
+    this.quests = {
+        'open': [],
+        'failed': [],
+        'completed': []
+    };
+    this.journal = [];
+}
+
+
+Journal.prototype.addEntry = function (text) {
+    'use strict';
+    this.journal.push(text);
+};
+
+
+Journal.prototype.getJournal = function () {
+    'use strict';
+    for (var i = this.journal.length - 1; i >= 0; i--) {
+        console.log(this.journal[i]);
+    }
+};
+
+
+Journal.prototype.addQuest = function (quest) {
+    'use strict';
+    if (quest.journalEntry !== null) {
+        this.addEntry(quest.journalEntry);
+    }
+    this.quests.open.push(quest);
+};
+
+
+Journal.prototype.findQuestIndexById = function (id) {
+    'use strict';
+    var index = null;
+    for (var i = 0; i < this.quests.open.length; i++) {
+        if (this.quests.open[i].id === id) {
+            index = i;
+        }
+    }
+    return index;
+};
+
+
+Journal.prototype.completeQuest = function (id) {
+    'use strict';
+    if (!id) {
+        throw new Error('You must supply an id for a quest to complete.');
+    }
+    var index = this.findQuestIndexById(id);
+    if (index === null) {
+        throw new Error('Cannot complete quest with id "' + id + '" as it is not found.');
+    }
+    this.quests.open[index].complete();
+    this.quests.completed.push(this.quests.open[index]);
+    this.quests.open.splice(index, 1);
+};
+
+
+Journal.prototype.failQuest = function (id) {
+    'use strict';
+    if (!id) {
+        throw new Error('You must supply an id for a quest to fail.');
+    }
+    var index = this.findQuestIndexById(id);
+    if (index === null) {
+        throw new Error('Cannot fail quest with id "' + id + '" as it is not found.');
+    }
+    this.quests.open[index].fail();
+    this.quests.failed.push(this.quests.open[index]);
+    this.quests.open.splice(index, 1);
+};
+
+
+module.exports = Journal;
+
+},{"./Quest":12}],12:[function(require,module,exports){
+var QuestUtil = require('../util/QuestUtil');
+
+function Quest(name, description, xpReward, itemReward, journalEntry) {
+    'use strict';
+    this.name = name;
+    this.description = description;
+    this.xpReward = xpReward;
+    this.itemReward = itemReward
+        ? itemReward
+        : null;
+    this.journalEntry = journalEntry
+        ? journalEntry
+        : null;
+    this.id = QuestUtil.generateQuestId(this.name);
+}
+
+Quest.prototype.complete = function () {
+    'use strict';
+    console.log('completed quest: ', this);
+};
+
+Quest.prototype.fail = function () {
+    'use strict';
+    console.log('failed quest: ', this);
+};
+
+module.exports = Quest;
+
+},{"../util/QuestUtil":16}],13:[function(require,module,exports){
 var Config = require('../conf/Config');
 
 /**
@@ -682,7 +800,7 @@ module.exports = {
     }
 };
 
-},{"../conf/Config":3}],12:[function(require,module,exports){
+},{"../conf/Config":3}],14:[function(require,module,exports){
 var Config = require('../conf/Config');
 var Player = require('../characters/Player');
 var MapFactory = require('../factories/MapFactory');
@@ -807,7 +925,7 @@ module.exports = {
 
 };
 
-},{"../characters/Player":2,"../conf/Config":3,"../factories/ItemFactory":5,"../factories/MapFactory":6,"../util/MapUtils":13}],13:[function(require,module,exports){
+},{"../characters/Player":2,"../conf/Config":3,"../factories/ItemFactory":5,"../factories/MapFactory":6,"../util/MapUtils":15}],15:[function(require,module,exports){
 var RoomFactory = require('../factories/RoomFactory');
 var Config = require('../conf/Config');
 
@@ -982,4 +1100,17 @@ module.exports = {
     }
 };
 
-},{"../conf/Config":3,"../factories/RoomFactory":7}]},{},[8])
+},{"../conf/Config":3,"../factories/RoomFactory":7}],16:[function(require,module,exports){
+module.exports = {
+    'generateQuestId': function (seed) {
+        'use strict';
+        var id = 'q-';
+        for (var i = 0; i < seed.length; i++) {
+            id += seed.charCodeAt(i).toString(16);
+        }
+        id += '-' + (Math.random(seed) * 999999999).toFixed(0).toString(16);
+        return id;
+    }
+};
+
+},{}]},{},[8])
