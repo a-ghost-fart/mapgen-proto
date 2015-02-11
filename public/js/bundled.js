@@ -1,13 +1,14 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 module.exports={
   "name": "crust-proto",
-  "version": "0.0.245",
+  "version": "0.0.269",
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-bower": "0.0.10",
     "gulp-browserify": "^0.5.1",
     "gulp-bump": "^0.1.13",
     "gulp-plumber": "^0.6.6",
+    "gulp-react": "^2.0.0",
     "gulp-rename": "^1.2.0",
     "gulp-sass": "^1.3.2",
     "jsdoc-to-markdown": "^0.5.11"
@@ -438,7 +439,11 @@ window.onload = function () {
     window.g = new Phaser.Game(
         Config.WIDTH,
         Config.HEIGHT,
-        Phaser.AUTO
+        Phaser.CANVAS,
+        document.getElementById('viewport'),
+        null,
+        false,
+        false
     );
     window.g.state.add('load', require('./states/LoadingState'));
     window.g.state.add('play', require('./states/PlayState'));
@@ -740,7 +745,7 @@ Quest.prototype.fail = function () {
 
 module.exports = Quest;
 
-},{"../util/QuestUtil":16}],13:[function(require,module,exports){
+},{"../util/QuestUtil":17}],13:[function(require,module,exports){
 var Config = require('../conf/Config');
 
 /**
@@ -806,6 +811,7 @@ var Player = require('../characters/Player');
 var MapFactory = require('../factories/MapFactory');
 var MapUtils = require('../util/MapUtils');
 var ItemFactory = require('../factories/ItemFactory');
+var TestUI = require('../ui/ReactTest');
 
 /**
  * Main game loop state
@@ -837,6 +843,8 @@ module.exports = {
         this.player = new Player(this, (this.game.spawnRoom.x * Config.ROOM_WIDTH) + 64, (this.game.spawnRoom.y * Config.ROOM_HEIGHT) + 64);
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player, Phaser.Camera.STYLE_TOPDOWN);
+
+        this.test = new TestUI(this.player);
 
         // Ideally this needs to go somewhere, not sure where yet.
         this.dustEmitter = this.game.add.emitter(0, 0, 100);
@@ -903,6 +911,8 @@ module.exports = {
         'use strict';
         var _this = this;
 
+        this.test.render(this.player);
+
         this.game.physics.arcade.collide(this.player, this.world.layer);
         this.game.physics.arcade.collide(this.player.projectiles, this.world.layer, function (projectile) {
             _this.dustEmitter.x = projectile.x;
@@ -925,7 +935,31 @@ module.exports = {
 
 };
 
-},{"../characters/Player":2,"../conf/Config":3,"../factories/ItemFactory":5,"../factories/MapFactory":6,"../util/MapUtils":15}],15:[function(require,module,exports){
+},{"../characters/Player":2,"../conf/Config":3,"../factories/ItemFactory":5,"../factories/MapFactory":6,"../ui/ReactTest":15,"../util/MapUtils":16}],15:[function(require,module,exports){
+function TestUI(player) {
+    'use strict';
+    this.viewport = document.getElementById('ui-viewport');
+    this.value = player.position.x;
+
+    this.test = React.createClass({
+        'render': function () {
+            return React.DOM.div(
+                null,
+                React.DOM.div(null, this.value)
+            );
+        }
+    });
+}
+
+TestUI.prototype.render = function (player) {
+    'use strict';
+    this.value = player.position.x;
+    React.renderComponent(React.createComponent(this.test), this.viewport);
+};
+
+module.exports = TestUI;
+
+},{}],16:[function(require,module,exports){
 var RoomFactory = require('../factories/RoomFactory');
 var Config = require('../conf/Config');
 
@@ -1100,7 +1134,7 @@ module.exports = {
     }
 };
 
-},{"../conf/Config":3,"../factories/RoomFactory":7}],16:[function(require,module,exports){
+},{"../conf/Config":3,"../factories/RoomFactory":7}],17:[function(require,module,exports){
 module.exports = {
     'generateQuestId': function (seed) {
         'use strict';

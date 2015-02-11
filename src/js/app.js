@@ -13,7 +13,11 @@ window.onload = function () {
     window.g = new Phaser.Game(
         Config.WIDTH,
         Config.HEIGHT,
-        Phaser.AUTO
+        Phaser.CANVAS,
+        document.getElementById('viewport'),
+        null,
+        false,
+        false
     );
     window.g.state.add('load', require('./states/LoadingState'));
     window.g.state.add('play', require('./states/PlayState'));

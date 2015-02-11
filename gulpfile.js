@@ -4,6 +4,7 @@ var browserify = require('gulp-browserify');
 var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
 var bump = require('gulp-bump');
+var react = require('gulp-react');
 
 gulp.task('bump', function () {
     'use strict';
@@ -11,6 +12,13 @@ gulp.task('bump', function () {
         .pipe(plumber())
         .pipe(bump({ type: 'patch' }))
         .pipe(gulp.dest('./'));
+});
+
+gulp.task('build:jsx', function () {
+    'use strict';
+    return gulp.src('src/jsx/**/*.jsx')
+        .pipe(react())
+        .pipe(gulp.dest('dist'));
 });
 
 gulp.task('build:js', ['bump'], function () {

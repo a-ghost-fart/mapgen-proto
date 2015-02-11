@@ -3,6 +3,7 @@ var Player = require('../characters/Player');
 var MapFactory = require('../factories/MapFactory');
 var MapUtils = require('../util/MapUtils');
 var ItemFactory = require('../factories/ItemFactory');
+var TestUI = require('../ui/ReactTest');
 
 /**
  * Main game loop state
@@ -34,6 +35,8 @@ module.exports = {
         this.player = new Player(this, (this.game.spawnRoom.x * Config.ROOM_WIDTH) + 64, (this.game.spawnRoom.y * Config.ROOM_HEIGHT) + 64);
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player, Phaser.Camera.STYLE_TOPDOWN);
+
+        this.test = new TestUI(this.player);
 
         // Ideally this needs to go somewhere, not sure where yet.
         this.dustEmitter = this.game.add.emitter(0, 0, 100);
@@ -99,6 +102,8 @@ module.exports = {
     'update': function () {
         'use strict';
         var _this = this;
+
+        this.test.render(this.player);
 
         this.game.physics.arcade.collide(this.player, this.world.layer);
         this.game.physics.arcade.collide(this.player.projectiles, this.world.layer, function (projectile) {

@@ -2,7 +2,25 @@ body {
     background: #000;
 }
 
-canvas {
+.wrapper {
     margin: 0 auto;
     border: 5px solid #fff;
+    position: relative;
+    width: 960px;
+    height: 540px;
+
+    #viewport {
+        z-index: 0;
+    }
+
+    #ui-viewport {
+        z-index: 100;
+    }
+
+    #viewport,
+    #ui-viewport {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
 }
