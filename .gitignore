@@ -2,3 +2,7 @@ node_modules/*
 *.swp
 **/npm-debug.log
 doc/*
+dist/index.html
+dist/css/*
+dist/js/*
+dist/assets/*
