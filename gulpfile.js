@@ -4,12 +4,11 @@ var browserify = require('gulp-browserify');
 var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
 var bump = require('gulp-bump');
-var react = require('gulp-react');
 
 var paths = {
     'src': {
         'scss': './src/scss/**/*.scss',
-        'js': './src/js/**/*.js',
+        'js': './src/js/app.js',
         'html': './src/html/**/*.html',
         'assets': './src/assets/**/*'
     },
@@ -42,28 +41,21 @@ gulp.task('bump', function () {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('build:jsx', function () {
-    'use strict';
-    return gulp.src('src/jsx/**/*.jsx')
-        .pipe(react())
-        .pipe(gulp.dest('dist'));
-});
-
 gulp.task('build:js', ['bump'], function () {
     'use strict';
-    return gulp.src('src/js/app.js')
+    return gulp.src(paths.src.js)
         .pipe(plumber())
         .pipe(browserify())
         .pipe(rename('bundled.js'))
-        .pipe(gulp.dest('public/js'));
+        .pipe(gulp.dest(paths.dist.js));
 });
 
 gulp.task('build:sass', function () {
     'use strict';
-    return gulp.src('src/scss/**/*.scss')
+    return gulp.src(paths.src.scss)
         .pipe(plumber())
         .pipe(sass())
-        .pipe(gulp.dest('public/css'));
+        .pipe(gulp.dest(paths.dist.css));
 });
 
 gulp.task('build', ['build:js', 'build:sass', 'copy:assets', 'copy:html']);
