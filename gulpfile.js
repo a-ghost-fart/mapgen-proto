@@ -4,6 +4,7 @@ var browserify = require('gulp-browserify');
 var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
 var bump = require('gulp-bump');
+var uglify = require('gulp-uglify');
 
 var paths = {
     'src': {
@@ -21,6 +22,7 @@ var paths = {
     }
 };
 
+// General tasks
 gulp.task('copy:assets', function () {
     'use strict';
     return gulp.src(paths.src.assets)
@@ -33,7 +35,37 @@ gulp.task('copy:html', function () {
         .pipe(gulp.dest(paths.dist.html));
 });
 
-gulp.task('bump', function () {
+// Release tasks
+gulp.task('release', ['release:js', 'release:sass', 'copy:assets', 'copy:html']);
+
+gulp.task('bump:minor', function () {
+    'use strict';
+    return gulp.src('./package.json')
+        .pipe(plumber())
+        .pipe(bump({ type: 'minor' }))
+        .pipe(gulp.dest('./'));
+});
+
+gulp.task('release:js', ['bump:minor'], function () {
+    'use strict';
+    return gulp.src(paths.src.js)
+        .pipe(plumber())
+        .pipe(browserify())
+        .pipe(uglify())
+        .pipe(rename('bundled.js'))
+        .pipe(gulp.dest(paths.dist.js));
+});
+
+gulp.task('release:sass', function () {
+    'use strict';
+    return gulp.src(paths.src.scss)
+        .pipe(plumber())
+        .pipe(sass())
+        .pipe(gulp.dest(paths.dist.css));
+});
+
+// Development tasks
+gulp.task('bump:patch', function () {
     'use strict';
     return gulp.src('./package.json')
         .pipe(plumber())
@@ -41,7 +73,7 @@ gulp.task('bump', function () {
         .pipe(gulp.dest('./'));
 });
 
-gulp.task('build:js', ['bump'], function () {
+gulp.task('build:js', ['bump:patch'], function () {
     'use strict';
     return gulp.src(paths.src.js)
         .pipe(plumber())
