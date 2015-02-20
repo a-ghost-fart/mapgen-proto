@@ -204,10 +204,6 @@ var Player = exports.Player = (function (_Phaser$Sprite) {
 
     return Player;
 })(Phaser.Sprite);
-
-
-
-module.exports = Player;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
@@ -1093,24 +1089,22 @@ var TestUI = exports.TestUI = (function () {
         this.viewport = document.getElementById("ui-viewport");
         this.value = player.position.x;
 
+        /*
         this.test = React.createClass({
-            displayName: "test",
-            render: function () {
-                return React.createElement(
-                    "div",
-                    null,
-                    "hello there"
+            'render': function () {
+                return (
+                    <div>
+                        hello there
+                    </div>
                 );
             }
         });
+        */
     }
 
     _prototypeProperties(TestUI, null, {
         render: {
-            value: function render(player) {
-                this.value = player.position.x;
-                React.render(this.test, this.viewport);
-            },
+            value: function render(player) {},
             writable: true,
             configurable: true
         }
@@ -1121,6 +1115,11 @@ var TestUI = exports.TestUI = (function () {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+/*
+this.value = player.position.x;
+React.render(this.test, this.viewport);
+*/
 
 },{}],15:[function(require,module,exports){
 "use strict";
