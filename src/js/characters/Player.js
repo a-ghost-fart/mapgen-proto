@@ -140,6 +140,3 @@ export class Player extends Phaser.Sprite {
         }
     }
 }
-
-
-module.exports = Player;
