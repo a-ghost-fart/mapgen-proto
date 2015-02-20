@@ -1,12 +1,12 @@
-var RoomFactory = require('../factories/RoomFactory');
-var Config = require('../conf/Config');
+import {RoomFactory} from '../factories/RoomFactory';
+import {Config} from '../conf/Config';
 
 /**
  * Set of utility functions for map generation
  *
  * @module MapUtils
  */
-module.exports = {
+export var MapUtils = {
 
     'roomFactory': new RoomFactory(),
 
@@ -170,4 +170,4 @@ module.exports = {
             }
         }
     }
-};
+}

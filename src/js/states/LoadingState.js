@@ -1,4 +1,4 @@
-var Config = require('../conf/Config');
+import {Config} from '../conf/Config';
 
 /**
  * state to handle preloading of assets for use
@@ -9,7 +9,7 @@ var Config = require('../conf/Config');
  * @module LoadingState
  * @extends Phaser.State
  */
-module.exports = {
+export var LoadingState = {
 
 
     /**
@@ -55,4 +55,4 @@ module.exports = {
             this.state.start('play');
         }
     }
-};
+}

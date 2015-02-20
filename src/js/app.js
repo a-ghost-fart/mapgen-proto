@@ -1,4 +1,6 @@
-var Config = require('./conf/Config');
+import {Config} from './conf/Config';
+import {LoadingState} from './states/LoadingState';
+import {PlayState} from './states/PlayState';
 
 /**
  * Bootstrap the game. For the purpose of
@@ -19,7 +21,7 @@ window.onload = function () {
         false,
         false
     );
-    window.g.state.add('load', require('./states/LoadingState'));
-    window.g.state.add('play', require('./states/PlayState'));
+    window.g.state.add('load', LoadingState);
+    window.g.state.add('play', PlayState);
     window.g.state.start('load');
 };

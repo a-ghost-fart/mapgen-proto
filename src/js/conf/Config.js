@@ -1,4 +1,3 @@
-var pkg = require('./../../../package.json');
 var tileSize = 32;
 var roomWidth = 40;
 var roomHeight = 20;
@@ -9,7 +8,7 @@ var roomHeight = 20;
  *
  * @module Config
  */
-module.exports = {
+export var Config = {
     /**
      * @attribute {Number} WIDTH - Width of the canvas
      */
@@ -21,11 +20,11 @@ module.exports = {
     /**
      * @attribute {String} TITLE - Window title
      */
-    'TITLE': pkg.name,
+    'TITLE': 'proto',
     /**
      * @attribute {String} VERSION - Application version
      */
-    'VERSION': pkg.version,
+    'VERSION': '0.0.0',
     /**
      * @attribute {Number} ROOM_TILE_WIDTH - Rooms are how many tiles wide?
      */

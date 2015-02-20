@@ -1,9 +1,9 @@
-var Config = require('../conf/Config');
-var Player = require('../characters/Player');
-var MapFactory = require('../factories/MapFactory');
-var MapUtils = require('../util/MapUtils');
-var ItemFactory = require('../factories/ItemFactory');
-var TestUI = require('../ui/ReactTest');
+import {Config} from '../conf/Config';
+import {Player} from '../characters/Player';
+import {MapFactory} from '../factories/MapFactory';
+import {MapUtils} from '../util/MapUtils';
+import {ItemFactory} from '../factories/ItemFactory';
+import {TestUI} from '../ui/ReactTest';
 
 /**
  * Main game loop state
@@ -11,7 +11,7 @@ var TestUI = require('../ui/ReactTest');
  * @module PlayState
  * @extends Phaser.State
  */
-module.exports = {
+export var PlayState = {
 
     /**
      * Called on loading of the state, before
@@ -125,4 +125,4 @@ module.exports = {
 
     },
 
-};
+}

@@ -1,4 +1,4 @@
-var Item = require('../items/Item');
+import {Item} from '../items/Item';
 
 /**
  * Simple factory to generate test items,
@@ -8,7 +8,7 @@ var Item = require('../items/Item');
  * @module ItemFactory
  * @readonly
  */
-module.exports = {
+export var ItemFactory = {
     /**
      * Generates a simple test item
      *

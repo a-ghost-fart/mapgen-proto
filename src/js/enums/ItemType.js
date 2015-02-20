@@ -4,7 +4,7 @@
  * @enum
  * @readonly
  */
-module.exports = {
+export var ItemType = {
     'ARMOUR': 0,
     'WEAPON': 1,
     'SPELL': 2,

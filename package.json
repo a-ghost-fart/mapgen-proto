@@ -1,15 +1,12 @@
 {
   "name": "crust-proto",
-  "version": "0.0.278",
+  "version": "0.0.411",
   "devDependencies": {
+    "babelify": "^5.0.3",
+    "browserify": "^8.1.3",
     "gulp": "^3.8.10",
-    "gulp-bower": "0.0.10",
-    "gulp-browserify": "^0.5.1",
     "gulp-bump": "^0.1.13",
-    "gulp-plumber": "^0.6.6",
-    "gulp-rename": "^1.2.0",
     "gulp-sass": "^1.3.2",
-    "gulp-uglify": "^1.1.0",
     "jsdoc-to-markdown": "^0.5.11"
   }
 }

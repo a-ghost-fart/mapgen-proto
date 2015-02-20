@@ -1,4 +1,4 @@
-module.exports = {
+export var QuestUtil = {
     'generateQuestId': function (seed) {
         'use strict';
         var id = 'q-';
@@ -8,4 +8,4 @@ module.exports = {
         id += '-' + (Math.random(seed) * 999999999).toFixed(0).toString(16);
         return id;
     }
-};
+}
