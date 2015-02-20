@@ -1,12 +1,21 @@
 {
   "name": "crust-proto",
   "version": "0.0.430",
+  "description": "Prototype for a javascript based game.",
+  "homepage": "http://antisocial.life",
+  "bugs": {
+    "url": "http://github.com/a-ghost-fart/mapgen-proto/issues"
+  },
+  "license": "GPLv2",
+  "author": {
+    "name": "a-ghost-fart",
+    "url": "http://antisocial.life"
+  },
   "devDependencies": {
     "babelify": "^5.0.3",
     "browserify": "^8.1.3",
     "gulp": "^3.8.10",
     "gulp-bump": "^0.1.13",
-    "gulp-sass": "^1.3.2",
-    "jsdoc-to-markdown": "^0.5.11"
+    "gulp-sass": "^1.3.2"
   }
 }
