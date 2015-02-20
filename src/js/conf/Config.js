@@ -20,7 +20,7 @@ export var Config = {
     /**
      * @attribute {String} TITLE - Window title
      */
-    'TITLE': 'proto',
+    'TITLE': 'title',
     /**
      * @attribute {String} VERSION - Application version
      */
