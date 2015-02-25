@@ -1085,6 +1085,7 @@ var MessageLog = exports.MessageLog = (function () {
         _classCallCheck(this, MessageLog);
 
         this.messageCount = 5;
+        this.rerender = true;
 
         this.messages = [];
         this.messages.length = this.messageCount; // Necessary because of the slice below
@@ -1118,13 +1119,18 @@ var MessageLog = exports.MessageLog = (function () {
         addMessage: {
             value: function addMessage(msg) {
                 this.messages.push(React.createElement(this.Message, { msg: msg }));
+                this.rerender = true;
             },
             writable: true,
             configurable: true
         },
         render: {
             value: function render() {
-                React.render(React.createElement(this.MessageLog, null), document.getElementById("ui-viewport"));
+                if (this.rerender) {
+                    React.render(React.createElement(this.MessageLog, null), document.getElementById("ui-viewport"));
+                    console.log("rendering");
+                    this.rerender = false;
+                }
             },
             writable: true,
             configurable: true
