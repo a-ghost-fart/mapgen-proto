@@ -1025,12 +1025,8 @@ var PlayState = exports.PlayState = {
         this.world.map.fill(1, 0, 0, map[0].length * Config.ROOM_TILE_WIDTH, map.length * Config.ROOM_TILE_HEIGHT, "test");
         this.world.furthest = MapUtils.findFurthestRoom(this, map);
 
-        /*
-        var xx = this.world.furthest.x * Config.ROOM_WIDTH + 60;
-        var yy = this.world.furthest.y * Config.ROOM_HEIGHT + 60;
-        */
-        var xx = this.game.spawnRoom.x * Config.ROOM_WIDTH + 120;
-        var yy = this.game.spawnRoom.y * Config.ROOM_HEIGHT + 120;
+        var xx = this.game.spawnRoom.x * Config.ROOM_WIDTH + 60;
+        var yy = this.game.spawnRoom.y * Config.ROOM_HEIGHT + 60;
 
         this.item = ItemFactory.generateItem(this.game, xx, yy);
 
@@ -1065,7 +1061,7 @@ var PlayState = exports.PlayState = {
         this.game.physics.arcade.collide(this.player, this.collectables, function (player, collectable) {
             player.pickUp(collectable);
             collectable.destroy();
-            _this.ui.addMessage("COLLECTED AN ITEM YEAH!");
+            _this.ui.addMessage(collectable.name + " added to inventory.");
         });
         this.player.handleUpdate(this);
         this.game.physics.arcade.collide(this.dustEmitter, this.world.layer);
@@ -1100,7 +1096,7 @@ var MessageLog = exports.MessageLog = (function () {
                 var messages = _this.messages.slice(Math.max(_this.messages.length - _this.messageCount, 1));
                 return React.createElement(
                     "ul",
-                    null,
+                    { className: "console" },
                     messages
                 );
             }

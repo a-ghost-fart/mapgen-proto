@@ -17,16 +17,25 @@ body {
 
     #ui-viewport {
         z-index: 100;
+        box-sizing: border-box;
+        ul.console {
+            list-style: none;
+            position: absolute;
+            margin: 0;
+            left: 0;
+            bottom: 0;
+            width: 550px;
+            min-height: 88px;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 15px;
+            font-family: courier;
+            color: #fff;
+        }
     }
 
     #viewport,
     #ui-viewport {
-        position: absolute;
         top: 0;
         left: 0;
-        ul {
-            list-style: none;
-            padding: 0;
-        }
     }
 }

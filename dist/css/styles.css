@@ -12,11 +12,20 @@ body {
   .wrapper #viewport {
     z-index: 0; }
   .wrapper #ui-viewport {
-    z-index: 100; }
+    z-index: 100;
+    box-sizing: border-box; }
+    .wrapper #ui-viewport ul.console {
+      list-style: none;
+      position: absolute;
+      margin: 0;
+      left: 0;
+      bottom: 0;
+      width: 550px;
+      min-height: 88px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 15px;
+      font-family: courier;
+      color: #fff; }
   .wrapper #viewport, .wrapper #ui-viewport {
-    position: absolute;
     top: 0;
     left: 0; }
-    .wrapper #viewport ul, .wrapper #ui-viewport ul {
-      list-style: none;
-      padding: 0; }

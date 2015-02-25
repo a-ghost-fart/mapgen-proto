@@ -77,8 +77,8 @@ export var PlayState = {
         this.world.map.fill(1, 0, 0, map[0].length * Config.ROOM_TILE_WIDTH, map.length * Config.ROOM_TILE_HEIGHT, 'test');
         this.world.furthest = MapUtils.findFurthestRoom(this, map);
 
-        var xx = this.world.furthest.x * Config.ROOM_WIDTH + 60;
-        var yy = this.world.furthest.y * Config.ROOM_HEIGHT + 60;
+        var xx = this.game.spawnRoom.x * Config.ROOM_WIDTH + 60;
+        var yy = this.game.spawnRoom.y * Config.ROOM_HEIGHT + 60;
 
         this.item = ItemFactory.generateItem(this.game, xx, yy);
 

@@ -11,7 +11,7 @@ export class MessageLog {
             'render': function () {
                 var messages = _this.messages.slice(Math.max(_this.messages.length - _this.messageCount, 1));
                 return (
-                    <ul>
+                    <ul className="console">
                         {messages}
                     </ul>
                 );
