@@ -3,7 +3,7 @@ import {Player} from '../characters/Player';
 import {MapFactory} from '../factories/MapFactory';
 import {MapUtils} from '../util/MapUtils';
 import {ItemFactory} from '../factories/ItemFactory';
-import {TestUI} from '../ui/ReactTest';
+import {UI} from '../ui/UI';
 
 /**
  * Main game loop state
@@ -36,7 +36,7 @@ export var PlayState = {
         this.game.add.existing(this.player);
         this.game.camera.follow(this.player, Phaser.Camera.STYLE_TOPDOWN);
 
-        this.test = new TestUI(this.player);
+        this.ui = new UI();
 
         // Ideally this needs to go somewhere, not sure where yet.
         this.dustEmitter = this.game.add.emitter(0, 0, 100);
@@ -103,8 +103,6 @@ export var PlayState = {
         'use strict';
         var _this = this;
 
-        this.test.render(this.player);
-
         this.game.physics.arcade.collide(this.player, this.world.layer);
         this.game.physics.arcade.collide(this.player.projectiles, this.world.layer, function (projectile) {
             _this.dustEmitter.x = projectile.x;
@@ -112,16 +110,16 @@ export var PlayState = {
             _this.dustEmitter.start(true, 2000, null, 10);
             projectile.kill();
         });
-
         this.game.physics.arcade.collide(this.player, this.collectables, function (player, collectable) {
             player.pickUp(collectable);
             collectable.destroy();
+            _this.ui.addMessage(collectable.name + ' added to inventory.');
         });
-
         this.player.handleUpdate(this);
         this.game.physics.arcade.collide(this.dustEmitter, this.world.layer);
-
         this.game.physics.arcade.collide(this.collectables, this.world.layer);
+
+        this.ui.render();
 
     },
 

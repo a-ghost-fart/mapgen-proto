@@ -17,3 +17,6 @@ body {
     position: absolute;
     top: 0;
     left: 0; }
+    .wrapper #viewport ul, .wrapper #ui-viewport ul {
+      list-style: none;
+      padding: 0; }
