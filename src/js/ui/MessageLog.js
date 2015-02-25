@@ -2,6 +2,7 @@ export class MessageLog {
 
     constructor() {
         this.messageCount = 5;
+        this.rerender = true;
 
         this.messages = [];
         this.messages.length = this.messageCount; // Necessary because of the slice below
@@ -30,10 +31,14 @@ export class MessageLog {
 
     addMessage(msg) {
         this.messages.push(<this.Message msg={msg}/>);
+        this.rerender = true;
     }
 
     render() {
-        React.render(<this.MessageLog/>, document.getElementById('ui-viewport'));
+        if (this.rerender) {
+            React.render(<this.MessageLog/>, document.getElementById('ui-viewport'));
+            this.rerender = false;
+        }
     }
 
 }
